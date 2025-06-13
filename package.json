@@ -6,7 +6,7 @@
     "dev": "turbo dev",
     "build": "turbo typecheck build",
     "typecheck": "turbo typecheck",
-    "lint": "turbo lint", 
+    "lint": "turbo lint",
     "frontend:dev": "turbo dev --filter=frontend",
     "server:dev": "turbo dev --filter=server",
     "start": "turbo start"
@@ -21,13 +21,22 @@
     "node": ">=22",
     "pnpm": ">=9"
   },
-  "keywords": ["electron", "monorepo", "vite", "react", "hono", "typescript"],
+  "keywords": [
+    "electron",
+    "monorepo",
+    "vite",
+    "react",
+    "hono",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^9.20.1",
     "turbo": "^2.5.4",
-    "typescript": "catalog:",
-    "eslint": "^9.20.1"
+    "typescript": "catalog:"
   },
-  "dependencies": {}
+  "dependencies": {
+    "dotenv-cli": "^8.0.0"
+  }
 }

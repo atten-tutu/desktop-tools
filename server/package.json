@@ -1,18 +1,18 @@
 {
   "name": "server",
   "type": "module",
-  "scripts": {
-    "dev": "npx tsx --env-file=../.env.local --watch api/index.ts",
-    "build": "npx tsup",
-    "start": "node --env-file=../.env.local dist/index.cjs",
-    "build:types": "npx tsc -p ./tsconfig.types.json --noCheck",
-    "typecheck": "npx tsc --b",
-    "lint": "eslint .",
-    "generate": "node --env-file=../.env.local drizzle-kit generate --config=db/drizzle.config.ts",
-    "migrate": "node --env-file=../.env.local drizzle-kit migrate --config=db/drizzle.config.ts",
-    "pull": "node script/drizzle-pull.sh",
-    "studio": "node --env-file=../.env.local drizzle-kit studio --config=db/drizzle.config.ts"
-  },
+"scripts": {
+  "dev": "tsx --env-file=../.env.local --watch api/index.ts",
+  "build": "tsup",
+  "start": "dotenv -e ../.env.local -- node dist/index.cjs",
+  "build:types": "tsc -p ./tsconfig.types.json --noCheck",
+  "typecheck": "tsc --b",
+  "lint": "eslint .",
+  "generate": "dotenv -e ../.env.local -- drizzle-kit generate --config=db/drizzle.config.ts",
+  "migrate": "dotenv -e ../.env.local -- drizzle-kit migrate --config=db/drizzle.config.ts",
+  "pull": "node script/drizzle-pull.sh",
+  "studio": "dotenv -e ../.env.local -- drizzle-kit studio --config=db/drizzle.config.ts"
+},
   "dependencies": {
     "@hono/node-server": "^1.14.4",
     "@hono/zod-openapi": "^0.19.8",
