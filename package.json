@@ -1,0 +1,33 @@
+{
+  "name": "electron-monorepo-template",
+  "version": "1.0.0",
+  "description": "一个基于 Electron 的 monorepo 模板项目",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo typecheck build",
+    "typecheck": "turbo typecheck",
+    "lint": "turbo lint", 
+    "frontend:dev": "turbo dev --filter=frontend",
+    "server:dev": "turbo dev --filter=server",
+    "start": "turbo start"
+  },
+  "workspaces": [
+    "packages/*",
+    "frontend",
+    "server"
+  ],
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "keywords": ["electron", "monorepo", "vite", "react", "hono", "typescript"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "typescript": "catalog:",
+    "eslint": "^9.20.1"
+  },
+  "dependencies": {}
+}

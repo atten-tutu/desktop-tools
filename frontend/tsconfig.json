@@ -1,0 +1,19 @@
+{
+  "extends": "../packages/typescript-config/frontend.json",
+  "include": [
+    "src", "electron"
+  ],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@server/*": ["../server/*"],
+      "@utils/*": ["./src/utils/*"],
+      // ...
+      "@/*": ["./src/*"],
+    }
+  },
+  "references": [
+    { "path": "../server/tsconfig.json" },
+  ]
+}

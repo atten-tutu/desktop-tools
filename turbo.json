@@ -1,0 +1,83 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalEnv": ["**/.env*", "DEV", "BASE_URL", "NODE_ENV"],
+  "globalDependencies": [
+    ".env.local",
+    "tsconfig.json",
+    "eslint.config.*",
+    "frontend/src/**/*.{ts,tsx}",
+    "server/{api,db,utils}/**/*.ts"
+  ],
+  "tasks": {
+    "build:types": {
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$", "server/tsconfig.types.json", "server/{api,db,utils}/**/*.ts"],
+      "outputs": ["server/output/**", "server/types/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["server#build:types", "^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "frontend/**/*.{ts,tsx}"],
+      "outputs": ["types/**"]
+    },
+    "frontend#tanstack:dev": {
+      "dependsOn": [],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "frontend/src/**/*.{ts,tsx}"],
+      "outputs": []
+    },
+    "frontend#typecheck": {
+      "dependsOn": ["server#build:types"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "frontend/**/*.{ts,tsx}"],
+      "outputs": []
+    },
+    "server#typecheck": {
+      "inputs": ["$TURBO_DEFAULT$", "server/tsconfig.json", "server/{api,db,utils}/**/*.ts"],
+      "outputs": ["server/types/**"]
+    },
+    "build": {
+      "dependsOn": ["^typecheck", "server#build:types", "^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", "build/**"]
+    },
+    "frontend#build": {
+      "dependsOn": ["tanstack:build", "^typecheck", "server#build:types"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "frontend/src/**/*.{ts,tsx}", "frontend/electron/**/*.ts"],
+      "outputs": ["frontend/dist/**", "frontend/dist-electron/**"]
+    },
+    "frontend#dev": {
+      "with": ["tanstack:dev", "server#dev"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "frontend/src/**/*.{ts,tsx}"],
+      "outputs": []
+    },
+    "server#build": {
+      "dependsOn": ["^typecheck"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "server/tsconfig.json",
+        "server/{api,db,utils}/**/*.ts"
+      ],
+      "outputs": ["server/dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "env": ["NODE_ENV", "DEV_USER", "DEV"],
+      "persistent": true,
+      "dependsOn": ["^build:types"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "inputs": ["$TURBO_DEFAULT$", "eslint.config.*", "src/**/*.{ts,tsx,js,jsx}"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.*", "jest.config.*", "test/**/*", "src/**/*.{test,spec}.{ts,tsx}"],
+      "outputs": ["coverage/**"]
+    }
+  }
+}

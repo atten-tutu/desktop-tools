@@ -1,0 +1,57 @@
+{
+  "name": "server",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx --env-file=../.env.local --watch api/index.ts",
+    "build": "npx tsup",
+    "start": "node --env-file=../.env.local dist/index.cjs",
+    "build:types": "npx tsc -p ./tsconfig.types.json --noCheck",
+    "typecheck": "npx tsc --b",
+    "lint": "eslint .",
+    "generate": "node --env-file=../.env.local drizzle-kit generate --config=db/drizzle.config.ts",
+    "migrate": "node --env-file=../.env.local drizzle-kit migrate --config=db/drizzle.config.ts",
+    "pull": "node script/drizzle-pull.sh",
+    "studio": "node --env-file=../.env.local drizzle-kit studio --config=db/drizzle.config.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@hono/zod-openapi": "^0.19.8",
+    "@hono/zod-validator": "^0.7.0",
+    "@scalar/hono-api-reference": "^0.9.3",
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.7",
+    "hono": "^4.7.11",
+    "hono-openapi": "^0.4.8",
+    "pg": "^8.16.0",
+    "zod": "catalog:",
+    "zod-openapi": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "^8.15.4",
+    "drizzle-kit": "^0.31.1",
+    "openapi-types": "^12.1.3",
+    "tsc": "^2.0.4",
+    "tsup": "^8.5.0",
+    "tsx": "^4.7.1",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    "./rpc": {
+      "types": "./utils/rpc.ts",
+      "default": "./utils/rpc.ts"
+    },
+    "./constants": {
+      "types": "./utils/const.ts",
+      "default": "./utils/const.ts"
+    },
+    "./types": {
+      "types": "./output/utils/types.d.ts",
+      "default": "./output/utils/types.d.ts"
+    },
+    "./*": {
+      "types": "./output/*.d.ts",
+      "default": "./*.ts"
+    }
+  }
+}
