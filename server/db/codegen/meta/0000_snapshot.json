@@ -1,12 +1,12 @@
 {
-  "id": "c1ca935a-1006-49b1-9b6c-3673726da118",
+  "id": "76ea4038-9c35-4188-90e2-23e837ef0438",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "tentix.posts": {
+    "desktop_tools.posts": {
       "name": "posts",
-      "schema": "tentix",
+      "schema": "desktop_tools",
       "columns": {
         "id": {
           "name": "id",
@@ -29,7 +29,7 @@
         "category": {
           "name": "category",
           "type": "enum_example",
-          "typeSchema": "tentix",
+          "typeSchema": "desktop_tools",
           "primaryKey": false,
           "notNull": true,
           "default": "'example1'"
@@ -74,7 +74,7 @@
           "name": "posts_author_id_users_id_fk",
           "tableFrom": "posts",
           "tableTo": "users",
-          "schemaTo": "tentix",
+          "schemaTo": "desktop_tools",
           "columnsFrom": [
             "author_id"
           ],
@@ -91,9 +91,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "tentix.users": {
+    "desktop_tools.users": {
       "name": "users",
-      "schema": "tentix",
+      "schema": "desktop_tools",
       "columns": {
         "id": {
           "name": "id",
@@ -134,7 +134,7 @@
         "role": {
           "name": "role",
           "type": "user_role",
-          "typeSchema": "tentix",
+          "typeSchema": "desktop_tools",
           "primaryKey": false,
           "notNull": true,
           "default": "'customer'"
@@ -185,9 +185,9 @@
     }
   },
   "enums": {
-    "tentix.enum_example": {
+    "desktop_tools.enum_example": {
       "name": "enum_example",
-      "schema": "tentix",
+      "schema": "desktop_tools",
       "values": [
         "example1",
         "example2",
@@ -196,9 +196,9 @@
         "example5"
       ]
     },
-    "tentix.user_role": {
+    "desktop_tools.user_role": {
       "name": "user_role",
-      "schema": "tentix",
+      "schema": "desktop_tools",
       "values": [
         "customer",
         "agent",
@@ -207,7 +207,7 @@
     }
   },
   "schemas": {
-    "tentix": "tentix"
+    "desktop_tools": "desktop_tools"
   },
   "sequences": {},
   "roles": {},

@@ -15,18 +15,18 @@ import {
 import {
   exampleEnumArray
 } from "../utils/const.ts";
-export const tentix = pgSchema("tentix");
+export const tools = pgSchema("desktop_tools");
 
-export const enumExample = tentix.enum(
+export const enumExample = tools.enum(
   "enum_example",
   exampleEnumArray,
 );
 
 // 用户角色枚举
-export const userRoleEnum = tentix.enum("user_role", ["customer", "agent", "technician"]);
+export const userRoleEnum = tools.enum("user_role", ["customer", "agent", "technician"]);
 
 // Core tables with no dependencies
-export const users = tentix.table(
+export const users = tools.table(
   "users",
   {
     id: serial("id").primaryKey().notNull(),
@@ -51,7 +51,7 @@ export const users = tentix.table(
   ],
 );
 
-export const posts = tentix.table("posts", {
+export const posts = tools.table("posts", {
   id: serial("id").primaryKey().notNull(),
   title: varchar("title", { length: 254 }).notNull(),
   content: text("content").notNull(),
