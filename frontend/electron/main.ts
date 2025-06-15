@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow,globalShortcut,nativeTheme   } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -29,6 +29,12 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
+    width: 800,
+    height: 100,
+    show: false, // 默认隐藏，等快捷键唤醒
+    alwaysOnTop: true,
+    frame: false,
+    transparent: true,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
@@ -66,4 +72,23 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+// ✅ 注册快捷键，控制窗口显隐
+app.whenReady().then(() => {
+  createWindow()
+
+  globalShortcut.register('CommandOrControl+Shift+P', () => {
+    if (!win) return
+    if (win.isVisible()) {
+      win.hide()
+    } else {
+      win.show()
+      win.focus()
+    }
+  })
+})
+
+// ✅ 退出时清理注册的快捷键
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll()
+})
+

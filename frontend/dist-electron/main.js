@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, globalShortcut } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -12,6 +12,13 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win;
 function createWindow() {
   win = new BrowserWindow({
+    width: 800,
+    height: 100,
+    show: false,
+    // 默认隐藏，等快捷键唤醒
+    alwaysOnTop: true,
+    frame: false,
+    transparent: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs")
@@ -37,7 +44,21 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  globalShortcut.register("CommandOrControl+Shift+P", () => {
+    if (!win) return;
+    if (win.isVisible()) {
+      win.hide();
+    } else {
+      win.show();
+      win.focus();
+    }
+  });
+});
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
