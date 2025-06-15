@@ -75,6 +75,9 @@ importers:
 
   frontend:
     dependencies:
+      '@arco-design/web-react':
+        specifier: ^2.66.1
+        version: 2.66.1(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query':
         specifier: ^5.80.7
         version: 5.80.7(react@19.1.0)
