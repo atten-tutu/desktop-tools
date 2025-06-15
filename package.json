@@ -32,11 +32,20 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^9.20.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "electron": "^30.0.1",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react": "^7.37.5",
     "turbo": "^2.5.4",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "dotenv-cli": "^8.0.0"
+    "@arco-design/web-react": "^2.66.1",
+    "dotenv-cli": "^8.0.0",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "react-i18next": "^15.5.2",
+    "zustand": "^5.0.5"
   }
 }
