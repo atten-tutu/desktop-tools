@@ -41,6 +41,11 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "dotenv-cli": "^8.0.0"
+    "@arco-design/web-react": "^2.66.1",
+    "dotenv-cli": "^8.0.0",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "react-i18next": "^15.5.2",
+    "zustand": "^5.0.5"
   }
 }

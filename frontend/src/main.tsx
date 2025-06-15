@@ -5,7 +5,15 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen.ts'
 
+import { ConfigProvider } from '@arco-design/web-react'
 import './index.css'
+
+// Language
+import zhCN from '@arco-design/web-react/es/locale/zh-CN'
+import enUS from '@arco-design/web-react/es/locale/en-US'
+import './i18n'
+import { useLanguageStore } from './stores/useLanguageStore'
+
 
 
 // Create a new router instance
