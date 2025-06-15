@@ -22,5 +22,8 @@
   "add_plugin": "Add Plugin",
   "edit": "Edit",
   "delete": "Delete",
-  "language_changed": "Language has been switched"
-}
+  "language_changed": "Language has been switched",
+  "system": "Follow System",
+  "current_theme": "Current Theme",
+  "back_to_home": "Back to Home"
+} 
