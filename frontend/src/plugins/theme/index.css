@@ -34,7 +34,7 @@
 }
 
 /* 主题切换按钮样式 */
-.theme-button {
+.theme-app-container button {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 0.5rem;
@@ -45,11 +45,17 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
   width: 100%;
   max-width: 15rem;
+  margin-bottom: 10px;
 }
 
-.theme-button:hover {
+.theme-app-container button:hover {
   background-color: #535bf2;
   transform: scale(1.05);
+}
+
+.theme-app-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* 当前主题信息样式 */
