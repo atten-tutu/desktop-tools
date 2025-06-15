@@ -1,4 +1,4 @@
-import { app, BrowserWindow,globalShortcut,nativeTheme   } from 'electron'
+import { app, BrowserWindow,globalShortcut,ipcMain,nativeTheme,screen   } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -24,34 +24,51 @@ export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
-
+let mainWindow: BrowserWindow | null = null
+let floatBallWindow: BrowserWindow | null = null
 let win: BrowserWindow | null
 
-function createWindow() {
-  win = new BrowserWindow({
+function createMainWindow() {
+  mainWindow = new BrowserWindow({
     width: 800,
-    height: 100,
-    show: false, // 默认隐藏，等快捷键唤醒
-    alwaysOnTop: true,
-    frame: false,
-    transparent: true,
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    height: 600,
+    show: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'),
-    },
-  })
-
-  // Test active push message to Renderer-process.
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', (new Date).toLocaleString())
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   })
 
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL)
+    mainWindow.loadURL(VITE_DEV_SERVER_URL) // 自定义页面路径
   } else {
-    // win.loadFile('dist/index.html')
-    win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+    mainWindow.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+}
+function createFloatBallWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+  floatBallWindow = new BrowserWindow({
+    width: 100,
+    height: 100,
+    x: width - 120,
+    y: height - 120,
+    frame: false,
+    alwaysOnTop: true,
+    hasShadow: false, 
+    skipTaskbar: true,
+    resizable: false,
+    transparent: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  })
+
+  floatBallWindow.loadURL(`${VITE_DEV_SERVER_URL}/float_ball`)
+
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -68,22 +85,27 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+ 
   }
 })
 
 // ✅ 注册快捷键，控制窗口显隐
 app.whenReady().then(() => {
-  createWindow()
+  createMainWindow()
+  createFloatBallWindow()
 
   globalShortcut.register('CommandOrControl+Shift+P', () => {
-    if (!win) return
-    if (win.isVisible()) {
-      win.hide()
+    if (!mainWindow) return
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
     } else {
-      win.show()
-      win.focus()
+      mainWindow.show()
+      mainWindow.focus()
     }
+  })
+  ipcMain.on('toggle-main-window', () => {
+    if (!mainWindow) return
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
   })
 })
 
