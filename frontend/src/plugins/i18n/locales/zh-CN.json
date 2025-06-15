@@ -22,5 +22,8 @@
   "add_plugin": "添加插件",
   "edit": "编辑",
   "delete": "删除",
-  "language_changed": "语言已切换"
-}
+  "language_changed": "语言已切换",
+  "system": "跟随系统",
+  "current_theme": "当前主题",
+  "back_to_home": "返回首页"
+} 
