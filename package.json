@@ -32,7 +32,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^9.20.1",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "electron": "^30.0.1",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react": "^7.37.5",
     "turbo": "^2.5.4",
     "typescript": "catalog:"
   },
