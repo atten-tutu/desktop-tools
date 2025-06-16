@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TimestampRoute = TimestampRouteImport.update({
+  id: '/timestamp',
+  path: '/timestamp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ThemeRoute = ThemeRouteImport.update({
   id: '/theme',
   path: '/theme',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/theme'
+  fullPaths: '/' | '/float_ball' | '/theme' | '/timestamp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/theme'
-  id: '__root__' | '/' | '/float_ball' | '/theme'
+  to: '/' | '/float_ball' | '/theme' | '/timestamp'
+  id: '__root__' | '/' | '/float_ball' | '/theme' | '/timestamp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Float_ballRoute: typeof Float_ballRoute
   ThemeRoute: typeof ThemeRoute
+  TimestampRoute: typeof TimestampRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timestamp': {
+      id: '/timestamp'
+      path: '/timestamp'
+      fullPath: '/timestamp'
+      preLoaderRoute: typeof TimestampRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/theme': {
       id: '/theme'
       path: '/theme'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Float_ballRoute: Float_ballRoute,
   ThemeRoute: ThemeRoute,
+  TimestampRoute: TimestampRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,10 +4,7 @@ import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import enUSMessages from './locales/en-US.json';
 import zhCNMessages from './locales/zh-CN.json';
-
-type SystemLanguage = 'system';
-type AvailableLanguage = 'en-US' | 'zh-CN';
-type Language = AvailableLanguage | SystemLanguage;
+import type { Language, AvailableLanguage, TranslationKeys } from './types';
 
 const localeMap: Record<AvailableLanguage, typeof zhCN> = {
   'zh-CN': zhCN,
@@ -15,15 +12,15 @@ const localeMap: Record<AvailableLanguage, typeof zhCN> = {
 };
 
 // 翻译文本
-const messageMap: Record<AvailableLanguage, typeof enUSMessages> = {
+const messageMap: Record<AvailableLanguage, typeof zhCNMessages> = {
   'zh-CN': zhCNMessages,
-  'en-US': enUSMessages,
+  'en-US': enUSMessages as typeof zhCNMessages,
 };
 
 const LanguageContext = React.createContext<{
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: keyof typeof enUSMessages) => string;
+  t: (key: TranslationKeys) => string;
 }>({
   language: 'system',
   setLanguage: () => {},
@@ -35,6 +32,11 @@ const getSystemLanguage = (): AvailableLanguage => {
   return systemLang.startsWith('zh') ? 'zh-CN' : 'en-US';
 };
 
+// 获取嵌套对象的值
+const getNestedValue = (obj: any, path: string): string => {
+  return path.split('.').reduce((acc, part) => acc?.[part], obj) || path;
+};
+
 // LanguageProvider 组件
 const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('system');
@@ -43,8 +45,8 @@ const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children })
 
   const currentLanguage: AvailableLanguage = language === 'system' ? systemLanguage : language;
 
-  const t = (key: keyof typeof enUSMessages): string => {
-    return messageMap[currentLanguage][key] || key;
+  const t = (key: TranslationKeys): string => {
+    return getNestedValue(messageMap[currentLanguage], key) || key;
   };
 
   useEffect(() => {
