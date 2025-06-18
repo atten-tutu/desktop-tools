@@ -1,3 +1,4 @@
+import React from 'react';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
@@ -11,6 +12,21 @@ import '@arco-design/web-react/dist/css/arco.css';
 
 // Language
 import { LanguageProvider } from './plugins/i18n/i18n';
+
+// 懒加载首页组件
+const LazyIndexRoute = React.lazy(() => import('./routes/index'));
+
+// 检查 routeTree.children 是否存在
+if (routeTree.children && routeTree.children.IndexRoute) {
+  // 修改 routeTree 中的首页路由组件
+  routeTree.children.IndexRoute = routeTree.children.IndexRoute.update({
+    component: () => (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <LazyIndexRoute />
+      </React.Suspense>
+    )
+  });
+}
 
 // Create a new router instance
 const router = createRouter({
@@ -33,6 +49,7 @@ declare module '@tanstack/react-router' {
 const AppWrapper = () => {
   return (
     <LanguageProvider>
+      {/* 移除 RouterProvider 的子元素 */}
       <RouterProvider router={router} />
     </LanguageProvider>
   );
