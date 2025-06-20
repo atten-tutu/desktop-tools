@@ -20,6 +20,7 @@ export default function App() {
       <Space>
         <Link to="/theme">{t('theme')}</Link>
         <Link to="/timestamp">{t('timestamp_converter')}</Link>
+        <Link to="/market">{t('app_market')}</Link>
       </Space>
     </>
   );

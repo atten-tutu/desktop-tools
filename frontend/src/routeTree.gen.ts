@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const TimestampRoute = TimestampRouteImport.update({
 const ThemeRoute = ThemeRouteImport.update({
   id: '/theme',
   path: '/theme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Float_ballRoute = Float_ballRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/theme' | '/timestamp'
+  fullPaths: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/theme' | '/timestamp'
-  id: '__root__' | '/' | '/float_ball' | '/theme' | '/timestamp'
+  to: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  id: '__root__' | '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Float_ballRoute: typeof Float_ballRoute
+  MarketRoute: typeof MarketRoute
   ThemeRoute: typeof ThemeRoute
   TimestampRoute: typeof TimestampRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/theme'
       fullPath: '/theme'
       preLoaderRoute: typeof ThemeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/float_ball': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Float_ballRoute: Float_ballRoute,
+  MarketRoute: MarketRoute,
   ThemeRoute: ThemeRoute,
   TimestampRoute: TimestampRoute,
 }
