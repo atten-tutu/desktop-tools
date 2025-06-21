@@ -5,7 +5,7 @@ import { IconCopy, IconLeft, IconPlayArrow, IconPause } from '@arco-design/web-r
 import Clock from 'react-clock';
 import 'react-clock/dist/Clock.css';
 import './style.css';
-import { useTranslation } from '../i18n/i18n';
+import { useTranslation } from '../../i18n/i18n';
 import { Link } from '@tanstack/react-router';
 
 const RadioGroup = Radio.Group;
