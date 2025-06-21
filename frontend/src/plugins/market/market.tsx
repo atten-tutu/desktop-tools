@@ -1,6 +1,6 @@
 // src/plugins/market/market.tsx
 import React, { useState } from 'react';
-import { useTranslation } from '../i18n/i18n';
+import { useTranslation } from '../../i18n/i18n';
 import { Input, List, Card, Button } from '@arco-design/web-react';
 // 按需导入 IconSearch 图标
 import { IconSearch } from '@arco-design/web-react/icon'; 

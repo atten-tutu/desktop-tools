@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router'; // 引入 Link 组件
-import { LanguageSwitcher } from '../plugins/i18n';
-import { useTranslation } from '../plugins/i18n/i18n';
+import { LanguageSwitcher } from '../i18n';
+import { useTranslation } from '../i18n/i18n';
 import { Space } from '@arco-design/web-react';
 
 export const Route = createFileRoute('/')({

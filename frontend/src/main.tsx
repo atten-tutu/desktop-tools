@@ -11,7 +11,7 @@ import './index.css';
 import '@arco-design/web-react/dist/css/arco.css';
 
 // Language
-import { LanguageProvider } from './plugins/i18n/i18n';
+import { LanguageProvider } from './i18n/i18n.tsx';
 
 // 懒加载首页组件
 const LazyIndexRoute = React.lazy(() => import('./routes/index'));
