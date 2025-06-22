@@ -16,11 +16,7 @@ declare global {
   }
 }
 
-interface Props {
-  theme?: 'light' | 'dark' | 'system';
-}
-
-const TimestampConverter: React.FC<Props> = ({ theme = 'light' }) => {
+const TimestampConverter: React.FC = () => {
   const { t } = useTimestampTranslation();
   const [timestampUnit, setTimestampUnit] = useState<'second' | 'millisecond'>('second');
   const [selectedZone, setSelectedZone] = useState<string>(DateTime.local().zoneName);
@@ -176,7 +172,7 @@ const TimestampConverter: React.FC<Props> = ({ theme = 'light' }) => {
   };
 
   return (
-    <div className={`timestamp-converter theme-${theme}`}>
+    <div className="timestamp-converter">
       <div className="left-panel">
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div className="controls">

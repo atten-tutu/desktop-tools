@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TimestampConverter from './renderer';
 import { TimestampI18nProvider } from './i18n';
 
 interface TimestampPluginProps {
   locale?: 'en' | 'zh';
-  theme?: 'light' | 'dark' | 'system';
 }
 
 const TimestampPlugin: React.FC<TimestampPluginProps> = ({ 
-  locale = 'en',
-  theme = 'system'
+  locale = 'en'
 }) => {
-  // 检测系统主题偏好
-  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
-  
-  // 计算实际主题
-  const actualTheme = theme === 'system' ? systemTheme : theme;
+  const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  );
+
+  useEffect(() => {
+    // 监听系统主题变化
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setSystemTheme(e.matches ? 'dark' : 'light');
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    const bodyClasses = document.body.classList;
+    if (!bodyClasses.contains('light') && !bodyClasses.contains('dark')) {
+      bodyClasses.add(systemTheme);
+      return () => {
+        bodyClasses.remove(systemTheme);
+      };
+    }
+  }, [systemTheme]);
 
   return (
     <TimestampI18nProvider defaultLocale={locale}>
-      <div className={`timestamp-plugin ${actualTheme}`}>
+      <div className="timestamp-plugin">
         <TimestampConverter />
       </div>
     </TimestampI18nProvider>
