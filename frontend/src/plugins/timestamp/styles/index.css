@@ -122,6 +122,39 @@
   color: var(--color-danger);
 }
 
+/* 覆盖 react-clock 默认样式 */
+.timestamp-converter .react-clock {
+  background-color: var(--clock-face-background-color);
+}
+
+.timestamp-converter .react-clock__face {
+  border-color: var(--clock-mark-color);
+}
+
+.timestamp-converter .react-clock__hand__body {
+  background-color: var(--clock-hand-color);
+}
+
+.timestamp-converter .react-clock__mark__body {
+  background-color: var(--clock-mark-color);
+}
+
+.timestamp-converter .react-clock__second-hand__body {
+  background-color: #f53f3f;
+}
+
+.timestamp-converter .react-clock__minute-hand__body {
+  background-color: var(--clock-hand-color);
+}
+
+.timestamp-converter .react-clock__hour-hand__body {
+  background-color: var(--clock-hand-color);
+}
+
+.timestamp-converter .react-clock__mark__number {
+  color: var(--clock-number-color);
+}
+
 /* 时钟主题适配 */
 .timestamp-plugin.dark .react-clock {
   --clock-face-border-color: rgba(255,255,255,0.3);

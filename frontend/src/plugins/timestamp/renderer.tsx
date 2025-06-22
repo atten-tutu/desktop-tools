@@ -16,10 +16,14 @@ declare global {
   }
 }
 
-const TimestampConverter = () => {
+interface Props {
+  theme?: 'light' | 'dark' | 'system';
+}
+
+const TimestampConverter: React.FC<Props> = ({ theme = 'light' }) => {
   const { t } = useTimestampTranslation();
   const [timestampUnit, setTimestampUnit] = useState<'second' | 'millisecond'>('second');
-  const [selectedZone, setSelectedZone] = useState<string>('');
+  const [selectedZone, setSelectedZone] = useState<string>(DateTime.local().zoneName);
   const [inputDateTime, setInputDateTime] = useState<string>('');
   const [inputTimestamp, setInputTimestamp] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
@@ -27,7 +31,7 @@ const TimestampConverter = () => {
   const [displayTimestamp, setDisplayTimestamp] = useState<string>('');
   const [showCopiedTip, setShowCopiedTip] = useState<string>('');
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [pausedDateTime, setPausedDateTime] = useState<any>(null);
+  const [pausedDateTime, setPausedDateTime] = useState<DateTime | null>(null);
 
   // 从electron主进程获取系统时区
   useEffect(() => {
@@ -42,6 +46,53 @@ const TimestampConverter = () => {
     };
     initializeTimezone();
   }, []);
+
+  // 更新时钟
+  useEffect(() => {
+    if (!selectedZone) return;
+
+    const updateClock = () => {
+      const utcNow = DateTime.utc();
+      const localTime = utcNow.setZone(selectedZone);
+      const jsDate = new Date(localTime.toFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSS'));
+      setCurrentTime(jsDate);
+    };
+
+    // 立即更新一次
+    updateClock();
+    
+    // 每秒更新一次时钟
+    const timer = setInterval(updateClock, 1000);
+    return () => clearInterval(timer);
+  }, [selectedZone]);
+
+  // 更新显示时间和时间戳
+  useEffect(() => {
+    if (!selectedZone) return;
+
+    const updateDisplay = () => {
+      if (isPaused && pausedDateTime) {
+        setDisplayTime(pausedDateTime.toFormat('yyyy-MM-dd HH:mm:ss'));
+        setDisplayTimestamp(
+          timestampUnit === 'second'
+            ? Math.floor(pausedDateTime.toSeconds()).toString()
+            : pausedDateTime.toMillis().toString()
+        );
+      } else {
+        const now = DateTime.now().setZone(selectedZone);
+        setDisplayTime(now.toFormat('yyyy-MM-dd HH:mm:ss'));
+        setDisplayTimestamp(
+          timestampUnit === 'second'
+            ? Math.floor(now.toSeconds()).toString()
+            : now.toMillis().toString()
+        );
+      }
+    };
+
+    updateDisplay();
+    const timer = setInterval(updateDisplay, 1000);
+    return () => clearInterval(timer);
+  }, [selectedZone, timestampUnit, isPaused, pausedDateTime]);
 
   const zones = useMemo(() => {
     const allZones = Intl.supportedValuesOf('timeZone');
@@ -62,6 +113,7 @@ const TimestampConverter = () => {
       });
   }, [t]);
 
+  // 复制到剪贴板
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setShowCopiedTip(id);
@@ -69,6 +121,7 @@ const TimestampConverter = () => {
     });
   };
 
+  // 初始化 inputDateTime 和 inputTimestamp
   useEffect(() => {
     if (!selectedZone) return;
     const today = DateTime.now().setZone(selectedZone).startOf('day');
@@ -111,39 +164,6 @@ const TimestampConverter = () => {
     }
   };
 
-  useEffect(() => {
-    const updateClock = () => {
-      setCurrentTime(new Date());
-    };
-    const timer = setInterval(updateClock, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!selectedZone) return;
-    const updateDisplay = () => {
-      if (isPaused && pausedDateTime) {
-        setDisplayTime(pausedDateTime.toFormat('yyyy-MM-dd HH:mm:ss'));
-        setDisplayTimestamp(
-          timestampUnit === 'second'
-            ? Math.floor(pausedDateTime.toSeconds()).toString()
-            : pausedDateTime.toMillis().toString()
-        );
-      } else {
-        const now = DateTime.now().setZone(selectedZone);
-        setDisplayTime(now.toFormat('yyyy-MM-dd HH:mm:ss'));
-        setDisplayTimestamp(
-          timestampUnit === 'second'
-            ? Math.floor(now.toSeconds()).toString()
-            : now.toMillis().toString()
-        );
-      }
-    };
-    updateDisplay();
-    const timer = setInterval(updateDisplay, 1000);
-    return () => clearInterval(timer);
-  }, [selectedZone, timestampUnit, isPaused, pausedDateTime]);
-
   const handlePlayPauseClick = () => {
     if (isPaused) {
       setIsPaused(false);
@@ -156,7 +176,7 @@ const TimestampConverter = () => {
   };
 
   return (
-    <div className="timestamp-converter">
+    <div className={`timestamp-converter theme-${theme}`}>
       <div className="left-panel">
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           <div className="controls">
