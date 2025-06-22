@@ -1,3 +1,28 @@
+.timestamp-plugin {
+  width: 100%;
+  height: 100%;
+}
+
+.timestamp-plugin.light {
+  --color-bg-1: #fff;
+  --color-bg-2: #f5f5f5;
+  --color-text-1: #222;
+  --color-text-2: #888;
+  --color-fill-2: #f0f0f0;
+  --color-success: #4CAF50;
+  --color-danger: #f44336;
+}
+
+.timestamp-plugin.dark {
+  --color-bg-1: #232323;
+  --color-bg-2: #181818;
+  --color-text-1: #fff;
+  --color-text-2: #aaa;
+  --color-fill-2: #333;
+  --color-success: #66bb6a;
+  --color-danger: #ef5350;
+}
+
 .timestamp-converter {
   display: flex;
   padding: 20px;
@@ -50,6 +75,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+  color: var(--color-text-1);
 }
 
 .result:hover {
@@ -88,17 +114,29 @@
   font-size: 24px;
 }
 
-body.dark .react-clock {
+.play-icon {
+  color: var(--color-success);
+}
+
+.pause-icon {
+  color: var(--color-danger);
+}
+
+/* 时钟主题适配 */
+.timestamp-plugin.dark .react-clock {
   --clock-face-border-color: rgba(255,255,255,0.3);
   --clock-hand-color: rgba(255,255,255,0.8);
   background: transparent;
 }
-body.dark .react-clock__face {
+
+.timestamp-plugin.dark .react-clock__face {
   border-color: var(--clock-face-border-color) !important;
 }
-body.dark .react-clock__hand__body {
+
+.timestamp-plugin.dark .react-clock__hand__body {
   background-color: var(--clock-hand-color) !important;
 }
-body.dark .react-clock__mark__body {
+
+.timestamp-plugin.dark .react-clock__mark__body {
   background-color: var(--clock-face-border-color) !important;
 } 
