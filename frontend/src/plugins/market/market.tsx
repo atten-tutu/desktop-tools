@@ -1,9 +1,10 @@
 // src/plugins/market/market.tsx
 import React, { useState } from 'react';
 import { useTranslation } from '../../i18n/i18n';
-import { Input, List, Card, Button } from '@arco-design/web-react';
-// 按需导入 IconSearch 图标
-import { IconSearch } from '@arco-design/web-react/icon'; 
+import { Input, List, Card, Button, Space } from '@arco-design/web-react';
+import { IconSearch } from '@arco-design/web-react/icon';
+import { Link } from '@tanstack/react-router';
+import PluginUploadPage from './upload';
 
 // 当前示例用本地添加数据
 //todo 由用户来上传这些数据
@@ -49,12 +50,15 @@ const AppMarket: React.FC = () => {
   return (
     <div>
       <h2>{t('app_market')}</h2>
-      <Input
-        placeholder={t('search_placeholder_for_market')}
-        prefix={<IconSearch />} // 使用按需导入的图标
-        value={searchText}
-        onChange={(value) => setSearchText(value)}
-      />
+      <Space>
+        <Input
+          placeholder={t('search_placeholder_for_market')}
+          prefix={<IconSearch />} // 使用按需导入的图标
+          value={searchText}
+          onChange={(value) => setSearchText(value)}
+        />
+        <Link to="/upload">{t('add_plugin')}</Link>
+      </Space>
       <List
         dataSource={filteredPlugins}
         render={(item) => (

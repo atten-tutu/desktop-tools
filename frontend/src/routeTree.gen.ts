@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UploadRouteImport } from './routes/upload'
 import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UploadRoute = UploadRouteImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TimestampRoute = TimestampRouteImport.update({
   id: '/timestamp',
   path: '/timestamp',
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
+  '/upload': typeof UploadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
+  '/upload': typeof UploadRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,27 @@ export interface FileRoutesById {
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
+  '/upload': typeof UploadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  fullPaths:
+    | '/'
+    | '/float_ball'
+    | '/market'
+    | '/theme'
+    | '/timestamp'
+    | '/upload'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
-  id: '__root__' | '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  to: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp' | '/upload'
+  id:
+    | '__root__'
+    | '/'
+    | '/float_ball'
+    | '/market'
+    | '/theme'
+    | '/timestamp'
+    | '/upload'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +99,18 @@ export interface RootRouteChildren {
   MarketRoute: typeof MarketRoute
   ThemeRoute: typeof ThemeRoute
   TimestampRoute: typeof TimestampRoute
+  UploadRoute: typeof UploadRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/upload': {
+      id: '/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof UploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/timestamp': {
       id: '/timestamp'
       path: '/timestamp'
@@ -125,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   MarketRoute: MarketRoute,
   ThemeRoute: ThemeRoute,
   TimestampRoute: TimestampRoute,
+  UploadRoute: UploadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
