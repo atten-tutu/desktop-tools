@@ -6,42 +6,59 @@ import Clock from 'react-clock';
 import 'react-clock/dist/Clock.css';
 import './styles/index.css';
 import { useTranslation } from '../../i18n/i18n';
-import { Link } from '@tanstack/react-router';
 
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
 
-const TimestampConverter: React.FC = () => {
+declare global {
+  interface Window {
+    electron: any;
+  }
+}
+
+const TimestampConverter = () => {
   const { t } = useTranslation();
   const [timestampUnit, setTimestampUnit] = useState<'second' | 'millisecond'>('second');
-  const [selectedZone, setSelectedZone] = useState(DateTime.local().zoneName);
-  const [inputDateTime, setInputDateTime] = useState('');
-  const [inputTimestamp, setInputTimestamp] = useState('');
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [displayTime, setDisplayTime] = useState('');
-  const [displayTimestamp, setDisplayTimestamp] = useState('');
-  const [showCopiedTip, setShowCopiedTip] = useState('');
-  const [isPaused, setIsPaused] = useState(false);
-  const [pausedDateTime, setPausedDateTime] = useState<DateTime | null>(null);
+  const [selectedZone, setSelectedZone] = useState<string>('');
+  const [inputDateTime, setInputDateTime] = useState<string>('');
+  const [inputTimestamp, setInputTimestamp] = useState<string>('');
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [displayTime, setDisplayTime] = useState<string>('');
+  const [displayTimestamp, setDisplayTimestamp] = useState<string>('');
+  const [showCopiedTip, setShowCopiedTip] = useState<string>('');
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [pausedDateTime, setPausedDateTime] = useState<any>(null);
+
+  // 初始化时从主进程获取系统时区
+  useEffect(() => {
+    const initializeTimezone = async () => {
+      try {
+        const systemZone = await window.electron.ipcRenderer.invoke('timestamp:getSystemTimezone');
+        setSelectedZone(systemZone);
+      } catch (error) {
+        console.error('Failed to get system timezone:', error);
+        setSelectedZone(DateTime.local().zoneName);
+      }
+    };
+    initializeTimezone();
+  }, []);
 
   const zones = useMemo(() => {
     const allZones = Intl.supportedValuesOf('timeZone');
-    // 过滤时区
     return allZones
-      .filter(zone => {
-        const key = `timestamp.timezones.${zone}` as const;
+      .filter((zone: string) => {
+        const key = `timestamp.timezones.${zone}` as import('../../i18n/types').TranslationKeys;
         try {
           return t(key) !== key;
         } catch {
           return false;
         }
       })
-      .sort((a, b) => {
-        const keyA = `timestamp.timezones.${a}` as const;
-        const keyB = `timestamp.timezones.${b}` as const;
+      .sort((a: string, b: string) => {
+        const keyA = `timestamp.timezones.${a}` as import('../../i18n/types').TranslationKeys;
+        const keyB = `timestamp.timezones.${b}` as import('../../i18n/types').TranslationKeys;
         const nameA = t(keyA);
         const nameB = t(keyB);
-
         const [utcA = ''] = nameA.split('|');
         const [utcB = ''] = nameB.split('|');
         return utcA.trim().localeCompare(utcB.trim());
@@ -56,12 +73,12 @@ const TimestampConverter: React.FC = () => {
     });
   };
 
-  // 初始化
+  // 初始化 inputDateTime 和 inputTimestamp
   useEffect(() => {
+    if (!selectedZone) return;
     const today = DateTime.now().setZone(selectedZone).startOf('day');
-    setInputDateTime(today.toFormat('yyyy-MM-dd\'T\'HH:mm'));
-
-    const timestamp = timestampUnit === 'second' 
+    setInputDateTime(today.toFormat("yyyy-MM-dd'T'HH:mm"));
+    const timestamp = timestampUnit === 'second'
       ? Math.floor(today.toSeconds())
       : today.toMillis();
     setInputTimestamp(timestamp.toString());
@@ -72,7 +89,7 @@ const TimestampConverter: React.FC = () => {
     if (value) {
       const dt = DateTime.fromISO(value, { zone: selectedZone });
       if (dt.isValid) {
-        const timestamp = timestampUnit === 'second' 
+        const timestamp = timestampUnit === 'second'
           ? Math.floor(dt.toSeconds())
           : dt.toMillis();
         setInputTimestamp(timestamp.toString());
@@ -91,7 +108,7 @@ const TimestampConverter: React.FC = () => {
           ? DateTime.fromSeconds(timestamp, { zone: selectedZone })
           : DateTime.fromMillis(timestamp, { zone: selectedZone });
         if (dt.isValid) {
-          setInputDateTime(dt.toFormat('yyyy-MM-dd\'T\'HH:mm'));
+          setInputDateTime(dt.toFormat("yyyy-MM-dd'T'HH:mm"));
         }
       }
     } else {
@@ -103,12 +120,12 @@ const TimestampConverter: React.FC = () => {
     const updateClock = () => {
       setCurrentTime(new Date());
     };
-
     const timer = setInterval(updateClock, 1000);
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
+    if (!selectedZone) return;
     const updateDisplay = () => {
       if (isPaused && pausedDateTime) {
         setDisplayTime(pausedDateTime.toFormat('yyyy-MM-dd HH:mm:ss'));
@@ -127,7 +144,6 @@ const TimestampConverter: React.FC = () => {
         );
       }
     };
-
     updateDisplay();
     const timer = setInterval(updateDisplay, 1000);
     return () => clearInterval(timer);
@@ -138,7 +154,6 @@ const TimestampConverter: React.FC = () => {
       setIsPaused(false);
       setPausedDateTime(null);
     } else {
-      // 暂停当前时间
       const now = DateTime.now().setZone(selectedZone);
       setPausedDateTime(now);
       setIsPaused(true);
@@ -158,7 +173,6 @@ const TimestampConverter: React.FC = () => {
               <Radio value="second">{t('timestamp.second')}</Radio>
               <Radio value="millisecond">{t('timestamp.millisecond')}</Radio>
             </RadioGroup>
-
             <Select
               placeholder={t('timestamp.select_timezone')}
               value={selectedZone}
@@ -166,7 +180,7 @@ const TimestampConverter: React.FC = () => {
               style={{ width: '240px', marginLeft: '16px' }}
             >
               {zones.map(zone => {
-                const key = `timestamp.timezones.${zone}` as const;
+                const key = `timestamp.timezones.${zone}` as import('../../i18n/types').TranslationKeys;
                 return (
                   <Option key={zone} value={zone}>
                     {t(key)}
@@ -175,7 +189,6 @@ const TimestampConverter: React.FC = () => {
               })}
             </Select>
           </div>
-
           <div className="converter-section">
             <h3>{t('timestamp.datetime_to_timestamp')}</h3>
             <Space direction="vertical" style={{ width: '100%' }}>
@@ -194,7 +207,6 @@ const TimestampConverter: React.FC = () => {
               )}
             </Space>
           </div>
-
           <div className="converter-section">
             <h3>{t('timestamp.timestamp_to_datetime')}</h3>
             <Space direction="vertical" style={{ width: '100%' }}>
@@ -215,10 +227,9 @@ const TimestampConverter: React.FC = () => {
           </div>
         </Space>
       </div>
-
       <div className="right-panel">
         <div className="clock-container">
-          <Clock 
+          <Clock
             value={currentTime}
             renderNumbers={true}
             size={180}
@@ -250,18 +261,4 @@ const TimestampConverter: React.FC = () => {
   );
 };
 
-// 时间戳转换页面
-const TimestampPage: React.FC = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="timestamp-page">
-      <TimestampConverter />
-      <Link to="/" className="arco-link back-link">
-        <IconLeft /> {t('back_to_home')}
-      </Link>
-    </div>
-  );
-};
-
-export { TimestampConverter };
-export default TimestampPage; 
+export default TimestampConverter; 

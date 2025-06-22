@@ -1,0 +1,104 @@
+.timestamp-converter {
+  display: flex;
+  padding: 20px;
+  gap: 40px;
+  height: 100%;
+  background-color: var(--color-bg-1);
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: var(--color-bg-2);
+  border-radius: 4px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.converter-section {
+  background-color: var(--color-bg-2);
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.converter-section h3 {
+  margin: 0 0 16px 0;
+  color: var(--color-text-1);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--color-bg-1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.result:hover {
+  background-color: var(--color-fill-2);
+}
+
+.clock-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.current-time-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.clock-control {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  cursor: pointer;
+  color: var(--color-text-2);
+  transition: color 0.2s;
+}
+
+.clock-control:hover {
+  color: var(--color-text-1);
+}
+
+.play-icon,
+.pause-icon {
+  font-size: 24px;
+}
+
+body.dark .react-clock {
+  --clock-face-border-color: rgba(255,255,255,0.3);
+  --clock-hand-color: rgba(255,255,255,0.8);
+  background: transparent;
+}
+body.dark .react-clock__face {
+  border-color: var(--clock-face-border-color) !important;
+}
+body.dark .react-clock__hand__body {
+  background-color: var(--clock-hand-color) !important;
+}
+body.dark .react-clock__mark__body {
+  background-color: var(--clock-face-border-color) !important;
+} 
