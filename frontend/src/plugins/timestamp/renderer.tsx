@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Radio, Select, Input, Space, Tooltip } from '@arco-design/web-react';
 import { DateTime } from 'luxon';
-import { IconCopy, IconLeft, IconPlayArrow, IconPause } from '@arco-design/web-react/icon';
+import { IconCopy, IconPlayArrow, IconPause } from '@arco-design/web-react/icon';
 import Clock from 'react-clock';
 import 'react-clock/dist/Clock.css';
 import './styles/index.css';
-import { useTranslation } from '../../i18n/i18n';
+import { useTimestampTranslation } from './i18n';
 
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
@@ -17,7 +17,7 @@ declare global {
 }
 
 const TimestampConverter = () => {
-  const { t } = useTranslation();
+  const { t } = useTimestampTranslation();
   const [timestampUnit, setTimestampUnit] = useState<'second' | 'millisecond'>('second');
   const [selectedZone, setSelectedZone] = useState<string>('');
   const [inputDateTime, setInputDateTime] = useState<string>('');
@@ -29,7 +29,7 @@ const TimestampConverter = () => {
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [pausedDateTime, setPausedDateTime] = useState<any>(null);
 
-  // 初始化时从主进程获取系统时区
+  // 从electron主进程获取系统时区
   useEffect(() => {
     const initializeTimezone = async () => {
       try {
@@ -47,25 +47,21 @@ const TimestampConverter = () => {
     const allZones = Intl.supportedValuesOf('timeZone');
     return allZones
       .filter((zone: string) => {
-        const key = `timestamp.timezones.${zone}` as import('../../i18n/types').TranslationKeys;
         try {
-          return t(key) !== key;
+          return t(`timezones.${zone}`) !== `timezones.${zone}`;
         } catch {
           return false;
         }
       })
       .sort((a: string, b: string) => {
-        const keyA = `timestamp.timezones.${a}` as import('../../i18n/types').TranslationKeys;
-        const keyB = `timestamp.timezones.${b}` as import('../../i18n/types').TranslationKeys;
-        const nameA = t(keyA);
-        const nameB = t(keyB);
+        const nameA = t(`timezones.${a}`);
+        const nameB = t(`timezones.${b}`);
         const [utcA = ''] = nameA.split('|');
         const [utcB = ''] = nameB.split('|');
         return utcA.trim().localeCompare(utcB.trim());
       });
   }, [t]);
 
-  // 复制
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setShowCopiedTip(id);
@@ -73,7 +69,6 @@ const TimestampConverter = () => {
     });
   };
 
-  // 初始化 inputDateTime 和 inputTimestamp
   useEffect(() => {
     if (!selectedZone) return;
     const today = DateTime.now().setZone(selectedZone).startOf('day');
@@ -170,27 +165,24 @@ const TimestampConverter = () => {
               value={timestampUnit}
               onChange={setTimestampUnit}
             >
-              <Radio value="second">{t('timestamp.second')}</Radio>
-              <Radio value="millisecond">{t('timestamp.millisecond')}</Radio>
+              <Radio value="second">{t('second')}</Radio>
+              <Radio value="millisecond">{t('millisecond')}</Radio>
             </RadioGroup>
             <Select
-              placeholder={t('timestamp.select_timezone')}
+              placeholder={t('select_timezone')}
               value={selectedZone}
               onChange={setSelectedZone}
               style={{ width: '240px', marginLeft: '16px' }}
             >
-              {zones.map(zone => {
-                const key = `timestamp.timezones.${zone}` as import('../../i18n/types').TranslationKeys;
-                return (
-                  <Option key={zone} value={zone}>
-                    {t(key)}
-                  </Option>
-                );
-              })}
+              {zones.map(zone => (
+                <Option key={zone} value={zone}>
+                  {t(`timezones.${zone}`)}
+                </Option>
+              ))}
             </Select>
           </div>
           <div className="converter-section">
-            <h3>{t('timestamp.datetime_to_timestamp')}</h3>
+            <h3>{t('datetime_to_timestamp')}</h3>
             <Space direction="vertical" style={{ width: '100%' }}>
               <Input
                 type="datetime-local"
@@ -198,7 +190,7 @@ const TimestampConverter = () => {
                 onChange={handleDateTimeChange}
               />
               {inputTimestamp && (
-                <Tooltip content={t('timestamp.copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp1'}>
+                <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp1'}>
                   <div className="result" onClick={() => copyToClipboard(inputTimestamp, 'timestamp1')}>
                     {inputTimestamp}
                     <IconCopy />
@@ -208,15 +200,15 @@ const TimestampConverter = () => {
             </Space>
           </div>
           <div className="converter-section">
-            <h3>{t('timestamp.timestamp_to_datetime')}</h3>
+            <h3>{t('timestamp_to_datetime')}</h3>
             <Space direction="vertical" style={{ width: '100%' }}>
               <Input
                 value={inputTimestamp}
                 onChange={handleTimestampChange}
-                placeholder={t('timestamp.enter_timestamp')}
+                placeholder={t('enter_timestamp')}
               />
               {inputDateTime && (
-                <Tooltip content={t('timestamp.copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp2'}>
+                <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp2'}>
                   <div className="result" onClick={() => copyToClipboard(inputDateTime, 'timestamp2')}>
                     {DateTime.fromISO(inputDateTime, { zone: selectedZone }).toFormat('yyyy-MM-dd HH:mm:ss')}
                     <IconCopy />
@@ -235,13 +227,13 @@ const TimestampConverter = () => {
             size={180}
           />
           <div className="current-time-section">
-            <Tooltip content={t('timestamp.copied')} position="bottom" popupVisible={showCopiedTip === 'current1'}>
+            <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'current1'}>
               <div className="result" onClick={() => copyToClipboard(displayTime, 'current1')}>
                 {displayTime}
                 <IconCopy />
               </div>
             </Tooltip>
-            <Tooltip content={t('timestamp.copied')} position="bottom" popupVisible={showCopiedTip === 'current2'}>
+            <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'current2'}>
               <div className="result" onClick={() => copyToClipboard(displayTimestamp, 'current2')}>
                 {displayTimestamp}
                 <IconCopy />
