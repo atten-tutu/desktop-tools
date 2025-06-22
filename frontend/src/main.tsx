@@ -1,3 +1,4 @@
+// src/main.tsx
 import React from 'react';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
@@ -12,6 +13,7 @@ import '@arco-design/web-react/dist/css/arco.css';
 
 // Language
 import { LanguageProvider } from './i18n/i18n.tsx';
+import { PluginProvider } from './plugins/market/PluginContext';
 
 // 懒加载首页组件
 const LazyIndexRoute = React.lazy(() => import('./routes/index'));
@@ -49,8 +51,9 @@ declare module '@tanstack/react-router' {
 const AppWrapper = () => {
   return (
     <LanguageProvider>
-      {/* 移除 RouterProvider 的子元素 */}
-      <RouterProvider router={router} />
+      <PluginProvider>
+        <RouterProvider router={router} />
+      </PluginProvider>
     </LanguageProvider>
   );
 };

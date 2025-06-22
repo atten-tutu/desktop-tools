@@ -9,6 +9,7 @@
   "plugin_name":"Plugin Name",
   "description":"Description",
   "back_to_market":"Back to Market",
+  "zip_file_path": "Zip File Path",
   "version": "Version",
   "changelog": "Changelog",
   "install": "Install",

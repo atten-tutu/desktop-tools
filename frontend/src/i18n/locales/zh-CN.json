@@ -9,6 +9,7 @@
   "plugin_name":"插件名",
   "description":"描述",
   "back_to_market":"回退至市场页面",
+  "zip_file_path": "ZIP文件路径",
   "version": "版本",
   "changelog": "更新日志",
   "install": "安装",
