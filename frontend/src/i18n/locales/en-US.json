@@ -32,5 +32,10 @@
   "system": "Follow System",
   "current_theme": "Current Theme",
   "back_to_home": "Back to Home",
-  "timestamp_converter": "Timestamp Converter"
+  "timestamp_converter": "Timestamp Converter",
+  "zh_cn": "简体中文",
+  "en_us": "English",
+  "skin": "Skin",
+  "system_settings": "System Settings",
+  "account_center": "Account Center"
 } 
