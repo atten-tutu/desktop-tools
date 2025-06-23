@@ -13,6 +13,7 @@ import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
+import { Route as ClipboardRouteImport } from './routes/clipboard'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TimestampRoute = TimestampRouteImport.update({
@@ -35,6 +36,11 @@ const Float_ballRoute = Float_ballRouteImport.update({
   path: '/float_ball',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClipboardRoute = ClipboardRouteImport.update({
+  id: '/clipboard',
+  path: '/clipboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/theme': typeof ThemeRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  fullPaths:
+    | '/'
+    | '/clipboard'
+    | '/float_ball'
+    | '/market'
+    | '/theme'
+    | '/timestamp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
-  id: '__root__' | '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  to: '/' | '/clipboard' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  id:
+    | '__root__'
+    | '/'
+    | '/clipboard'
+    | '/float_ball'
+    | '/market'
+    | '/theme'
+    | '/timestamp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClipboardRoute: typeof ClipboardRoute
   Float_ballRoute: typeof Float_ballRoute
   MarketRoute: typeof MarketRoute
   ThemeRoute: typeof ThemeRoute
@@ -109,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Float_ballRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clipboard': {
+      id: '/clipboard'
+      path: '/clipboard'
+      fullPath: '/clipboard'
+      preLoaderRoute: typeof ClipboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClipboardRoute: ClipboardRoute,
   Float_ballRoute: Float_ballRoute,
   MarketRoute: MarketRoute,
   ThemeRoute: ThemeRoute,

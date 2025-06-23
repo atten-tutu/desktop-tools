@@ -49,7 +49,7 @@ function RouteComponent() {
   }, [])
 
   return (
-    <div style={styles.page} onClick={() => {
+    <div style={styles.wrapper} onClick={() => {
     ipcRenderer.send('toggle-main-window')
   }}>
       <div style={styles.ball}>悬浮球</div>
@@ -78,6 +78,6 @@ const styles = {
     color: '#fff',
     fontSize: '16px',
     cursor: 'pointer',
-    userSelect: 'none',
+    UserSelect: 'none',
   },
 }
