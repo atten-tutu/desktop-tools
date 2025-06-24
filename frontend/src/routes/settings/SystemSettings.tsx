@@ -3,7 +3,7 @@ import { Form, Select, Radio } from '@arco-design/web-react';
 import { useTranslation } from '@/i18n/i18n';
 import { ThemeContext } from '../../plugins/theme/theme';
 import { useSkin } from '../../plugins/skin/context';
-import { SKIN_OPTIONS } from '../../plugins/skin/constants';
+import { SKIN_OPTIONS, SKIN_COLORS } from '../../plugins/skin/constants';
 import type { SkinType } from '../../plugins/skin/constants';
 
 const SystemSettings: React.FC = () => {
@@ -34,6 +34,33 @@ const SystemSettings: React.FC = () => {
     { label: t('system'), value: 'system' },
   ];
 
+  // 颜色名称映射
+  const colorNameMap = {
+    blue: 'color_blue',
+    yellow: 'color_yellow',
+    cyan: 'color_cyan'
+  } as const;
+
+  // 渲染颜色选项
+  const colorOptions = SKIN_OPTIONS.map(option => ({
+    ...option,
+    label: (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div 
+          style={{ 
+            width: '16px', 
+            height: '16px', 
+            backgroundColor: SKIN_COLORS[option.value as SkinType],
+            marginRight: '8px',
+            borderRadius: '2px',
+            border: '1px solid #ddd'
+          }} 
+        />
+        {t(colorNameMap[option.value as SkinType])}
+      </div>
+    )
+  }));
+
   return (
     <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} style={{ width: '100%' }}>
       <Form.Item label={t('language')}>
@@ -54,7 +81,7 @@ const SystemSettings: React.FC = () => {
           type="button"
           value={skin}
           onChange={handleSkinChange}
-          options={SKIN_OPTIONS}
+          options={colorOptions}
         />
       </Form.Item>
     </Form>
