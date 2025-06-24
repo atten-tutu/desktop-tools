@@ -12,9 +12,12 @@ const ThemeContext = React.createContext<{
   setTheme: () => {},
 });
 
-// ThemeProvider 组件，明确声明 children 属性
+// ThemeProvider 组件
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    return savedTheme || 'system';
+  });
 
   // 检测系统主题偏好
   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -26,6 +29,8 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     const currentTheme = theme === 'system' ? systemTheme : theme;
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(currentTheme);
+    // 保存主题设置到 localStorage
+    localStorage.setItem('theme', theme);
   }, [theme, systemTheme]);
 
   return (

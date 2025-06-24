@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Select, Radio, ColorPicker } from '@arco-design/web-react';
 import { useTranslation } from '@/i18n/i18n';
+import { ThemeContext } from '../../plugins/theme/theme';
 
 const SystemSettings: React.FC = () => {
   const { language, setLanguage, t } = useTranslation();
@@ -8,7 +9,10 @@ const SystemSettings: React.FC = () => {
     setLanguage(value);
   };
 
-  const [theme, setTheme] = useState('system');
+  const { theme, setTheme } = React.useContext(ThemeContext);
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme);
+  };
 
   const languageOptions = [
     { label: t('system'), value: 'system' },
@@ -29,11 +33,13 @@ const SystemSettings: React.FC = () => {
         </Select>
       </Form.Item>
       <Form.Item label={t('theme')}>
-        <Radio.Group type="button" value={theme} onChange={setTheme} style={{ width: '100%' }}>
-          {themeOptions.map(opt => (
-            <Radio key={opt.value} value={opt.value}>{opt.label}</Radio>
-          ))}
-        </Radio.Group>
+        <Radio.Group 
+          type="button" 
+          value={theme} 
+          onChange={handleThemeChange}
+          style={{ width: '100%' }}
+          options={themeOptions}
+        />
       </Form.Item>
       <Form.Item label={t('skin')}>
         <ColorPicker defaultValue={'#165DFF'} showText />
