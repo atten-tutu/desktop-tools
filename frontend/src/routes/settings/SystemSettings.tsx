@@ -1,7 +1,10 @@
 import React from 'react';
-import { Form, Select, Radio, ColorPicker } from '@arco-design/web-react';
+import { Form, Select, Radio } from '@arco-design/web-react';
 import { useTranslation } from '@/i18n/i18n';
 import { ThemeContext } from '../../plugins/theme/theme';
+import { useSkin } from '../../plugins/skin/context';
+import { SKIN_OPTIONS } from '../../plugins/skin/constants';
+import type { SkinType } from '../../plugins/skin/constants';
 
 const SystemSettings: React.FC = () => {
   const { language, setLanguage, t } = useTranslation();
@@ -12,6 +15,11 @@ const SystemSettings: React.FC = () => {
   const { theme, setTheme } = React.useContext(ThemeContext);
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
+  };
+
+  const { skin, setSkin } = useSkin();
+  const handleSkinChange = (value: SkinType) => {
+    setSkin(value);
   };
 
   const languageOptions = [
@@ -42,7 +50,12 @@ const SystemSettings: React.FC = () => {
         />
       </Form.Item>
       <Form.Item label={t('skin')}>
-        <ColorPicker defaultValue={'#165DFF'} showText />
+        <Radio.Group
+          type="button"
+          value={skin}
+          onChange={handleSkinChange}
+          options={SKIN_OPTIONS}
+        />
       </Form.Item>
     </Form>
   );
