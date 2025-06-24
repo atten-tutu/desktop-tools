@@ -21,7 +21,7 @@ const Settings: React.FC = () => {
   return (
     <ThemeProvider>
       <Layout style={{ height: '100vh', width: '100vw' }}>
-        <Header style={{ display: 'flex', alignItems: 'center', gap: 12, margin: 12 }}>
+        <Header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, backgroundColor: 'var(--color-bg-2)'}}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
             <IconHome style={{ fontSize: 28, color: primaryColor }} />
           </Link>
@@ -46,7 +46,7 @@ const Settings: React.FC = () => {
                 <Menu.Item key='1'><IconUser style={{ color: primaryColor }} />{t('account_center')}</Menu.Item>
               </Menu>
             </Sider>
-            <Content>
+            <Content style={{ backgroundColor: 'var(--color-bg-1)', padding: 20 }}>
               {selectedKey === '0' && <SystemSettings />}
               {/* TODO */}
               {selectedKey === '1' && <div>{t('account_center')} - 未完成</div>}

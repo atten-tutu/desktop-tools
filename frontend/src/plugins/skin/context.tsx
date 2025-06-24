@@ -3,32 +3,6 @@ import type { SkinType } from './constants';
 import { SKIN_COLORS } from './constants';
 import { ConfigProvider } from '@arco-design/web-react';
 
-// 颜色变体计算函数
-const getColorVariants = (hexColor: string) => {
-  // 简单的明暗变体计算
-  const lighten = (hex: string, amount: number): string => {
-    const num = parseInt(hex.slice(1), 16);
-    const r = Math.min(255, ((num >> 16) & 0xff) + amount);
-    const g = Math.min(255, ((num >> 8) & 0xff) + amount);
-    const b = Math.min(255, (num & 0xff) + amount);
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
-  };
-  
-  const darken = (hex: string, amount: number): string => {
-    const num = parseInt(hex.slice(1), 16);
-    const r = Math.max(0, ((num >> 16) & 0xff) - amount);
-    const g = Math.max(0, ((num >> 8) & 0xff) - amount);
-    const b = Math.max(0, (num & 0xff) - amount);
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
-  };
-
-  return {
-    primary: hexColor,
-    hover: lighten(hexColor, 20),
-    active: darken(hexColor, 20)
-  };
-};
-
 interface SkinContextType {
   skin: SkinType;
   setSkin: (skin: SkinType) => void;

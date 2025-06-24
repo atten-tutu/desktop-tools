@@ -11,12 +11,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  --color-bg-1: #fff;
-  --color-bg-2: #f5f5f5;
-  --color-text-1: #222;
-  --color-text-2: #888;
-  --color-fill-2: #f0f0f0;
 }
 
 a {
@@ -67,12 +61,6 @@ body.light {
 body.dark {
   background-color: #000;
   color: #fff;
-
-  --color-bg-1: #232323;
-  --color-bg-2: #181818;
-  --color-text-1: #fff;
-  --color-text-2: #aaa;
-  --color-fill-2: #333;
 }
 
 @media (prefers-color-scheme: light) {

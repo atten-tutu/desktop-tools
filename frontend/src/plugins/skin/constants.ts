@@ -1,9 +1,9 @@
 export type SkinType = 'blue' | 'yellow' | 'cyan';
 
 export const SKIN_COLORS = {
-  blue: '#165DFF',    // Arco Blue
-  yellow: '#FFCD00',  // 明黄色
-  cyan: '#0FC6C2'     // 青色
+  blue: '#3C7EFF',    // Arco Blue
+  yellow: '#CFB325',  // Yellow
+  cyan: '#1FA6AA'     // Cyan
 };
 
 export const SKIN_OPTIONS = [
