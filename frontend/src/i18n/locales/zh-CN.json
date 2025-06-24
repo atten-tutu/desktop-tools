@@ -32,5 +32,13 @@
   "system": "跟随系统",
   "current_theme": "当前主题",
   "back_to_home": "返回首页",
-  "timestamp_converter": "时间戳转换"
+  "timestamp_converter": "时间戳转换",
+  "zh_cn": "简体中文",
+  "en_us": "English",
+  "skin": "换肤",
+  "system_settings": "系统设置",
+  "account_center": "账户中心",
+  "color_blue": "极致蓝",
+  "color_cyan": "碧涛青",
+  "color_yellow": "柠檬黄"
 } 

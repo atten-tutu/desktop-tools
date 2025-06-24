@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const TimestampRoute = TimestampRouteImport.update({
 const ThemeRoute = ThemeRouteImport.update({
   id: '/theme',
   path: '/theme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
+  '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
+  '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
@@ -60,21 +68,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
+  '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
   '/timestamp': typeof TimestampRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  fullPaths:
+    | '/'
+    | '/float_ball'
+    | '/market'
+    | '/settings'
+    | '/theme'
+    | '/timestamp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
-  id: '__root__' | '/' | '/float_ball' | '/market' | '/theme' | '/timestamp'
+  to: '/' | '/float_ball' | '/market' | '/settings' | '/theme' | '/timestamp'
+  id:
+    | '__root__'
+    | '/'
+    | '/float_ball'
+    | '/market'
+    | '/settings'
+    | '/theme'
+    | '/timestamp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Float_ballRoute: typeof Float_ballRoute
   MarketRoute: typeof MarketRoute
+  SettingsRoute: typeof SettingsRoute
   ThemeRoute: typeof ThemeRoute
   TimestampRoute: typeof TimestampRoute
 }
@@ -93,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/theme'
       fullPath: '/theme'
       preLoaderRoute: typeof ThemeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -123,6 +153,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Float_ballRoute: Float_ballRoute,
   MarketRoute: MarketRoute,
+  SettingsRoute: SettingsRoute,
   ThemeRoute: ThemeRoute,
   TimestampRoute: TimestampRoute,
 }
