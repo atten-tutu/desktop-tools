@@ -9,17 +9,19 @@ import { useTranslation } from '@/i18n/i18n';
 import SystemSettings from './settings/SystemSettings';
 import { createFileRoute } from '@tanstack/react-router';
 import { ThemeProvider } from '../plugins/theme/theme';
+import { useSkin } from '../plugins/skin/context';
 
 const Settings: React.FC = () => {
   const { t } = useTranslation();
   const [selectedKey, setSelectedKey] = React.useState('0');  
+  const { primaryColor } = useSkin();
 
   return (
     <ThemeProvider>
       <Layout style={{ height: '100vh', width: '100vw' }}>
         <Header style={{ display: 'flex', alignItems: 'center', gap: 12, margin: 12 }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
-            <IconHome style={{ fontSize: 28 }} />
+            <IconHome style={{ fontSize: 28, color: primaryColor }} />
           </Link>
           <h2 style={{ margin: 0 }}>{t('settings')}</h2>
         </Header>
@@ -38,8 +40,8 @@ const Settings: React.FC = () => {
                 selectedKeys={[selectedKey]}
                 onClickMenuItem={setSelectedKey}
               >
-                <Menu.Item key='0'><IconSettings />{t('system_settings')}</Menu.Item>
-                <Menu.Item key='1'><IconUser />{t('account_center')}</Menu.Item>
+                <Menu.Item key='0'><IconSettings style={{ color: primaryColor }} />{t('system_settings')}</Menu.Item>
+                <Menu.Item key='1'><IconUser style={{ color: primaryColor }} />{t('account_center')}</Menu.Item>
               </Menu>
             </Sider>
             <Content>
