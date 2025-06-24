@@ -6,7 +6,9 @@ import Content from '@arco-design/web-react/es/Layout/content';
 import Sider from '@arco-design/web-react/es/Layout/sider';
 import { IconHome, IconSettings, IconUser } from '@arco-design/web-react/icon';
 import { useTranslation } from '@/i18n/i18n';
-import SystemSettings from './settings/SystemSettings';
+import SystemSettings from './settings/system_settings';
+// TODO: 完成账户中心组件后再导入
+// import AccountCenter from './settings/account_center';
 import { createFileRoute } from '@tanstack/react-router';
 import { ThemeProvider } from '../plugins/theme/theme';
 import { useSkin } from '../plugins/skin/context';
@@ -46,7 +48,8 @@ const Settings: React.FC = () => {
             </Sider>
             <Content>
               {selectedKey === '0' && <SystemSettings />}
-              {selectedKey === '1' && <div>这里是账户中心页面内容</div>}
+              {/* TODO */}
+              {selectedKey === '1' && <div>{t('account_center')} - 未完成</div>}
             </Content>
           </Layout>
         </Form>
