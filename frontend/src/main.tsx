@@ -8,7 +8,6 @@ import '@arco-design/web-react/dist/css/arco.css';
 import { routeTree } from './routeTree.gen.ts';
 
 import './index.css';
-import '@arco-design/web-react/dist/css/arco.css';
 
 // Language
 import { LanguageProvider } from './i18n/i18n.tsx';

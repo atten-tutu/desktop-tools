@@ -8,15 +8,11 @@ import { IconHome, IconSettings, IconUser } from '@arco-design/web-react/icon';
 import { useTranslation } from '@/i18n/i18n';
 import SystemSettings from './settings/SystemSettings';
 import { createFileRoute } from '@tanstack/react-router';
-import { ThemeContext, ThemeProvider } from '../plugins/theme/theme';
+import { ThemeProvider } from '../plugins/theme/theme';
 
 const Settings: React.FC = () => {
   const { t } = useTranslation();
-  const { theme } = React.useContext(ThemeContext);
-  const [selectedKey, setSelectedKey] = React.useState('0');
-
-  // 根据当前主题判断是否为深色模式
-  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const [selectedKey, setSelectedKey] = React.useState('0');  
 
   return (
     <ThemeProvider>
@@ -32,17 +28,13 @@ const Settings: React.FC = () => {
             <Sider
               style={{
                 width: '25vw',
-                background: isDark ? 'var(--color-bg-1)' : '#fff',
-                transition: 'background 0.3s'
               }}
             >
               <Menu
                 style={{
                   width: '100%',
                   borderRadius: 4,
-                  ...(isDark ? {} : { background: '#fff' })
                 }}
-                theme={isDark ? 'dark' : 'light'}
                 selectedKeys={[selectedKey]}
                 onClickMenuItem={setSelectedKey}
               >
