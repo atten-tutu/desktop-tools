@@ -73,10 +73,27 @@ app.whenReady().then(() => {
     if (!mainWindow) return;
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
   });
+  ipcMain.on("open-plugin", (event, pluginName) => {
+    openPluginWindow(pluginName);
+    console.log(`Opened plugin: ${pluginName}`, path.join(process.env.APP_ROOT, "plugins", pluginName, "index.html"));
+  });
 });
 app.on("will-quit", () => {
   globalShortcut.unregisterAll();
 });
+function openPluginWindow(pluginName) {
+  const pluginHtml = path.join(process.env.APP_ROOT, "plugins", pluginName, "index.html");
+  const win2 = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  win2.loadFile(pluginHtml);
+}
 export {
   MAIN_DIST,
   RENDERER_DIST,

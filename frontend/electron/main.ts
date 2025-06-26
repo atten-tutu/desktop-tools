@@ -107,10 +107,28 @@ app.whenReady().then(() => {
     if (!mainWindow) return
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
   })
+  ipcMain.on('open-plugin', (event, pluginName: string) => {
+    openPluginWindow(pluginName)
+    console.log(`Opened plugin: ${pluginName}`, path.join(process.env.APP_ROOT!, 'plugins', pluginName, 'index.html'))
+  })
 })
 
 // ✅ 退出时清理注册的快捷键
 app.on('will-quit', () => {
   globalShortcut.unregisterAll()
 })
+
+function openPluginWindow(pluginName: string) {
+  const pluginHtml = path.join(process.env.APP_ROOT!, 'plugins', pluginName, 'index.html');
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  win.loadFile(pluginHtml);
+}
 
