@@ -12,20 +12,34 @@ const ThemeContext = React.createContext<{
   setTheme: () => {},
 });
 
-// ThemeProvider 组件，明确声明 children 属性
+// ThemeProvider 组件
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    return savedTheme || 'system';
+  });
 
   // 检测系统主题偏好
   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : 'light';
 
-  // 根据主题设置 body 类名
+  // 根据主题设置 body 类名和 Arco Design 主题
   useEffect(() => {
     const currentTheme = theme === 'system' ? systemTheme : theme;
+    // 设置 body 类名
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(currentTheme);
+    
+    // 设置 Arco Design 主题
+    if (currentTheme === 'dark') {
+      document.body.setAttribute('arco-theme', 'dark');
+    } else {
+      document.body.removeAttribute('arco-theme');
+    }
+    
+    // 保存主题设置到 localStorage
+    localStorage.setItem('theme', theme);
   }, [theme, systemTheme]);
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { ThemeContext, ThemeProvider } from './theme';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@arco-design/web-react';
-import { useTranslation } from '../i18n/i18n';
+import { useTranslation } from '../../i18n/i18n';
 
 // 示例组件，用于切换主题
 const ThemeSwitcher: React.FC = () => {

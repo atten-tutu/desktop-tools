@@ -1,6 +1,6 @@
 // src/plugins/market/index.tsx
 import React, { useEffect, useState } from 'react';
-import { clipboard } from 'electron';
+import { clipboard, nativeImage } from 'electron';
 import { Link } from '@tanstack/react-router';
 
 const MSG_KEY = 'clipboard_text_history';
@@ -31,14 +31,16 @@ const ClipBoardPlugin: React.FC = () => {
         lastText = newText;
       }
       const newImg = clipboard.readImage();
-      const newDataUrl = newImg.toDataURL();
-      if (newDataUrl && newDataUrl !== lastImage) {
-        setImages(prev => {
-          const next = [newDataUrl, ...prev].slice(0, 10); // 只保留10条
-          localStorage.setItem(IMG_KEY, JSON.stringify(next));
-          return next;
-        });
-        lastImage = newDataUrl;
+      if(!newImg.isEmpty()){
+        const newDataUrl = newImg.toDataURL();
+        if (newDataUrl && newDataUrl !== lastImage) {
+          setImages(prev => {
+            const next = [newDataUrl, ...prev].slice(0, 10); // 只保留10条
+            localStorage.setItem(IMG_KEY, JSON.stringify(next));
+            return next;
+          });
+          lastImage = newDataUrl;
+        }
       }
     }, 300);
     return () => clearInterval(timer);
@@ -71,14 +73,49 @@ const ClipBoardPlugin: React.FC = () => {
       {tab === 'text' && (
         <div>
           {messages.map((msg, index) => (
-            <p key={index}>{msg}</p>
+            <div
+              key={index}
+              style={{
+                padding: '8px',
+                margin: '8px 0',
+                background: '#f5f5f5',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                userSelect: 'text',
+              }}
+              onContextMenu={e => {
+                e.preventDefault();
+                clipboard.writeText(msg);
+              }}
+              title="右键复制"
+            >
+              {msg}
+            </div>
           ))}
         </div>
       )}
       {tab === 'image' && (
         <div>
           {images.map((imgSrc, index) => (
-            <img key={index} src={imgSrc} alt={`Clipboard Image ${index}`} style={{ maxWidth: '100px', height: 'auto' }} />
+            <div
+              key={index}
+              style={{
+                display: 'inline-block',
+                margin: '8px',
+                background: '#f5f5f5',
+                borderRadius: '4px',
+                padding: '4px',
+              }}
+              onContextMenu={e => {
+                e.preventDefault();
+                // 直接用 nativeImage.createFromDataURL
+                const img = nativeImage.createFromDataURL(imgSrc);
+                clipboard.writeImage(img);
+              }}
+              title="右键复制图片"
+            >
+              <img src={imgSrc} alt={`Clipboard Image ${index}`} style={{ maxWidth: '128px', height: '144px' }} />
+            </div>
           ))}
         </div>
       )}

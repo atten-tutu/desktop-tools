@@ -1,0 +1,13 @@
+{
+  "name": "timestamp",
+  "version": "1.0.0",
+  "description": "时间戳转换工具",
+  "main": "electron-main.ts",
+  "renderer": "renderer.tsx",
+  "icon": "assets/icon.png",
+  "dependencies": {
+    "@arco-design/web-react": "*",
+    "luxon": "*",
+    "react-clock": "*"
+  }
+} 
