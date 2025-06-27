@@ -6,7 +6,7 @@
     "build": "tsup",
     "start": "dotenv -e ../.env.local -- node dist/index.cjs",
     "build:types": "tsc -p ./tsconfig.types.json --noCheck",
-    "typecheck": "tsc --b",
+    "typecheck": "npx tsc --b",
     "lint": "eslint .",
     "generate": "dotenv -e ../.env.local -- drizzle-kit generate --config=db/drizzle.config.ts",
     "migrate": "dotenv -e ../.env.local -- drizzle-kit migrate --config=db/drizzle.config.ts",

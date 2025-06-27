@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SnipasteRouteImport } from './routes/snipaste'
+import { Route as Screen_shotRouteImport } from './routes/screen_shot'
+import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SnipasteRoute = SnipasteRouteImport.update({
+  id: '/snipaste',
+  path: '/snipaste',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Screen_shotRoute = Screen_shotRouteImport.update({
+  id: '/screen_shot',
+  path: '/screen_shot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Float_ballRoute = Float_ballRouteImport.update({
+  id: '/float_ball',
+  path: '/float_ball',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/float_ball': typeof Float_ballRoute
+  '/screen_shot': typeof Screen_shotRoute
+  '/snipaste': typeof SnipasteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/float_ball': typeof Float_ballRoute
+  '/screen_shot': typeof Screen_shotRoute
+  '/snipaste': typeof SnipasteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/float_ball': typeof Float_ballRoute
+  '/screen_shot': typeof Screen_shotRoute
+  '/snipaste': typeof SnipasteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/float_ball' | '/screen_shot' | '/snipaste'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/float_ball' | '/screen_shot' | '/snipaste'
+  id: '__root__' | '/' | '/float_ball' | '/screen_shot' | '/snipaste'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  Float_ballRoute: typeof Float_ballRoute
+  Screen_shotRoute: typeof Screen_shotRoute
+  SnipasteRoute: typeof SnipasteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/snipaste': {
+      id: '/snipaste'
+      path: '/snipaste'
+      fullPath: '/snipaste'
+      preLoaderRoute: typeof SnipasteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/screen_shot': {
+      id: '/screen_shot'
+      path: '/screen_shot'
+      fullPath: '/screen_shot'
+      preLoaderRoute: typeof Screen_shotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/float_ball': {
+      id: '/float_ball'
+      path: '/float_ball'
+      fullPath: '/float_ball'
+      preLoaderRoute: typeof Float_ballRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  Float_ballRoute: Float_ballRoute,
+  Screen_shotRoute: Screen_shotRoute,
+  SnipasteRoute: SnipasteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
