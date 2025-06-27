@@ -19,8 +19,8 @@ const App = () => {
       );
       setPlugins(filtered);
     }
-    console.log("do something");
-    console.log(plugins);
+    //console.log("do something");
+    //console.log(plugins);
   };
 
   return (
