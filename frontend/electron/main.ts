@@ -1,7 +1,8 @@
-import { app, BrowserWindow,globalShortcut,ipcMain,nativeTheme,screen   } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, screen  } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import fs from 'fs';
 
 // @ts-ignore
 const require = createRequire(import.meta.url)
@@ -111,6 +112,12 @@ app.whenReady().then(() => {
     openPluginWindow(pluginName)
     console.log(`Opened plugin: ${pluginName}`, path.join(process.env.APP_ROOT!, 'plugins', pluginName, 'index.html'))
   })
+  ipcMain.on('search-plugins', async (event) => {
+    const plugins = getAllPlugins();
+    event.returnValue = plugins;
+    console.log(`Searched plugins: ${plugins.map(p => p.name).join(', ')}`);
+  });
+    
 })
 
 // ✅ 退出时清理注册的快捷键
@@ -130,5 +137,24 @@ function openPluginWindow(pluginName: string) {
     }
   });
   win.loadFile(pluginHtml);
+}
+
+function getAllPlugins() {
+  const pluginsDir = path.join(process.env.APP_ROOT!, 'plugins');
+  const result: { name: string; icon: string; dir: string }[] = [];
+  const dirs = fs.readdirSync(pluginsDir, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory());
+  for (const dirent of dirs) {
+    const pluginJsonPath = path.join(pluginsDir, dirent.name, 'plugin.json');
+    if (fs.existsSync(pluginJsonPath)) {
+      const json = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf-8'));
+      result.push({
+        name: json.name,
+        icon: json.icon,
+        dir: dirent.name,
+      });
+    }
+  }
+  return result;
 }
 

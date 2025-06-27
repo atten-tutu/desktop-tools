@@ -3,7 +3,8 @@ import { Link } from '@tanstack/react-router'; // 引入 Link 组件
 import { useTranslation } from '../i18n/i18n';
 import { Space, Button } from '@arco-design/web-react';
 import { ipcRenderer } from 'electron';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import  Search  from '../plugins/search/search'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -61,6 +62,7 @@ export default function App() {
           打开插件
         </Button>
       </div>
+      <Search/>
     </>
   );
 }
