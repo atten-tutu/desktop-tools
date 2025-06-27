@@ -141,17 +141,28 @@ function openPluginWindow(pluginName: string) {
 
 function getAllPlugins() {
   const pluginsDir = path.join(process.env.APP_ROOT!, 'plugins');
-  const result: { name: string; icon: string; dir: string }[] = [];
+  const result: { name: string; icon: string; dir: string; iconDataUrl?: string }[] = [];
   const dirs = fs.readdirSync(pluginsDir, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory());
   for (const dirent of dirs) {
     const pluginJsonPath = path.join(pluginsDir, dirent.name, 'plugin.json');
     if (fs.existsSync(pluginJsonPath)) {
       const json = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf-8'));
+      let iconDataUrl = '';
+      if (json.icon) {
+        const iconPath = path.join(pluginsDir, dirent.name, json.icon);
+        if (fs.existsSync(iconPath)) {
+          const ext = path.extname(iconPath).slice(1) || 'png';
+          const fileData = fs.readFileSync(iconPath);
+          const base64 = fileData.toString('base64');
+          iconDataUrl = `data:image/${ext};base64,${base64}`;
+        }
+      }
       result.push({
         name: json.name,
         icon: json.icon,
         dir: dirent.name,
+        iconDataUrl,
       });
     }
   }
