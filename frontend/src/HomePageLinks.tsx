@@ -13,6 +13,7 @@ const HomePageLinks: React.FC = () => {
     { to: '/timestamp', label: t('timestamp_converter') },
     { to: '/market', label: t('app_market') },
     { to: '/clipboard', label: t('app_clipboard') },
+    { to: '/lan-share', label: t('lan_share') },
     { to: '/settings', label: t('settings') },
   ];
 

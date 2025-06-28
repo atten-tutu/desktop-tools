@@ -1,0 +1,296 @@
+/* 聊天界面样式 */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: hidden; 
+  max-height: calc(100vh - 100px); 
+}
+
+.secret-code-container {
+  margin-bottom: 16px;
+}
+
+.secret-code-input {
+  max-width: 300px;
+}
+
+.secret-code-label {
+  color: var(--color-text-2);
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: var(--color-bg-2);
+  border-radius: 4px;
+  position: relative;
+  min-height: 200px; /* 确保有最小高度 */
+  max-height: calc(100% - 100px); /* 减去输入框高度 */
+}
+
+.empty-message {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.message-bubble {
+  margin-bottom: 16px;
+  max-width: 70%;
+  display: flex;
+}
+
+.message-bubble.outgoing {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.message-content {
+  padding: 10px 12px;
+  border-radius: 12px;
+  position: relative;
+  word-break: break-word;
+}
+
+.outgoing .message-content {
+  background-color: var(--color-primary-light-2);
+  color: var(--color-text-1);
+  border-top-right-radius: 2px;
+  margin-right: 8px;
+}
+
+.incoming .message-content {
+  background-color: var(--color-bg-1);
+  color: var(--color-text-1);
+  border-top-left-radius: 2px;
+  margin-left: 8px;
+}
+
+.device-name {
+  font-size: 12px;
+  color: var(--color-text-3);
+  margin-bottom: 4px;
+}
+
+.text-content {
+  white-space: pre-wrap;
+}
+
+.file-content {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px dashed var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-bg-2);
+}
+
+.file-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: var(--color-text-2);
+}
+
+.file-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.file-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  font-size: 12px;
+  color: var(--color-text-3);
+}
+
+.message-footer {
+  font-size: 11px;
+  color: var(--color-text-3);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.timestamp {
+  margin-right: 4px;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+}
+
+.loading-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-text-3);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-start; /* 改为顶部对齐 */
+  gap: 10px;
+  padding: 10px;
+  background-color: var(--color-bg-2);
+  border-radius: 4px;
+  min-height: 60px;
+  position: relative;
+}
+
+.message-input {
+  flex: 1;
+}
+
+.drag-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.chat-container.dragging .drag-hint {
+  opacity: 1;
+}
+
+/* 状态颜色 */
+.success-status {
+  color: var(--color-success);
+}
+
+.failed-status {
+  color: var(--color-danger);
+}
+
+.pending-status {
+  color: var(--color-warning);
+}
+
+/* 上传区域样式 */
+.upload-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 8px;
+}
+
+.file-preview-area {
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 0;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.file-preview-item {
+  position: relative;
+  padding: 4px 8px;
+  background-color: var(--color-fill-2);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  max-width: 200px;
+}
+
+.file-preview-name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 4px;
+  max-width: 120px;
+}
+
+.file-preview-remove {
+  cursor: pointer;
+  color: var(--color-text-3);
+  margin: 0 4px;
+}
+
+.file-preview-remove:hover {
+  color: var(--color-danger);
+}
+
+/* 上传和发送按钮容器 */
+.upload-send-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* 自定义上传组件样式 */
+.custom-upload {
+  flex: 1;
+}
+
+.custom-upload .arco-upload-trigger {
+  width: 100% !important;
+  height: 40px !important;
+  border: 1px dashed var(--color-primary-light-3) !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+}
+
+.custom-upload .arco-upload-trigger:hover {
+  border-color: var(--color-primary) !important;
+  border-width: 1px !important;
+}
+
+.custom-upload .arco-upload-trigger-drag {
+  width: 100% !important;
+  height: 40px !important;
+}
+
+.custom-upload .arco-upload-trigger-drag:hover {
+  background-color: var(--color-primary-light-1) !important;
+}
+
+.upload-drag-content {
+  font-size: 13px !important;
+  line-height: 40px !important;
+  height: 40px !important;
+  text-align: center;
+  color: var(--color-text-3);
+}
+
+/* 发送按钮样式 */
+.send-button {
+  height: 40px !important;
+  padding: 0 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  margin-left: auto;
+} 

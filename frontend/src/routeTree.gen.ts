@@ -13,6 +13,7 @@ import { Route as TimestampRouteImport } from './routes/timestamp'
 import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as LanShareRouteImport } from './routes/lan-share'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
 import { Route as ClipboardRouteImport } from './routes/clipboard'
 import { Route as AddPluginRouteImport } from './routes/add-plugin'
@@ -36,6 +37,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LanShareRoute = LanShareRouteImport.update({
+  id: '/lan-share',
+  path: '/lan-share',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Float_ballRoute = Float_ballRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/add-plugin': typeof AddPluginRoute
   '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/lan-share': typeof LanShareRoute
   '/market': typeof MarketRoute
   '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/add-plugin': typeof AddPluginRoute
   '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/lan-share': typeof LanShareRoute
   '/market': typeof MarketRoute
   '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/add-plugin': typeof AddPluginRoute
   '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/lan-share': typeof LanShareRoute
   '/market': typeof MarketRoute
   '/settings': typeof SettingsRoute
   '/theme': typeof ThemeRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/add-plugin'
     | '/clipboard'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/settings'
     | '/theme'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/add-plugin'
     | '/clipboard'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/settings'
     | '/theme'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/add-plugin'
     | '/clipboard'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/settings'
     | '/theme'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AddPluginRoute: typeof AddPluginRoute
   ClipboardRoute: typeof ClipboardRoute
   Float_ballRoute: typeof Float_ballRoute
+  LanShareRoute: typeof LanShareRoute
   MarketRoute: typeof MarketRoute
   SettingsRoute: typeof SettingsRoute
   ThemeRoute: typeof ThemeRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lan-share': {
+      id: '/lan-share'
+      path: '/lan-share'
+      fullPath: '/lan-share'
+      preLoaderRoute: typeof LanShareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/float_ball': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddPluginRoute: AddPluginRoute,
   ClipboardRoute: ClipboardRoute,
   Float_ballRoute: Float_ballRoute,
+  LanShareRoute: LanShareRoute,
   MarketRoute: MarketRoute,
   SettingsRoute: SettingsRoute,
   ThemeRoute: ThemeRoute,
