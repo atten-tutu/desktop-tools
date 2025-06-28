@@ -4,6 +4,8 @@
   "search_placeholder": "请输入命令或关键字...",
   "settings": "设置",
   "theme": "主题",
+  "name":"名称",
+  "description":"描述",
   "app_market": "应用市场",
   "search_placeholder_for_market": "请输入插件名称搜索...",
   "version": "版本",

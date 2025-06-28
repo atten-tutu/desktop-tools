@@ -1,3 +1,4 @@
+// src/main.tsx
 import React from 'react';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
@@ -12,6 +13,7 @@ import './index.css';
 // Language
 import { LanguageProvider } from './i18n/i18n.tsx';
 import { SkinProvider } from './plugins/skin/context';
+import { PluginProvider } from './plugins/market/PluginContext';
 
 // 懒加载首页组件
 const LazyIndexRoute = React.lazy(() => import('./routes/index'));
@@ -50,7 +52,9 @@ const AppWrapper = () => {
   return (
     <LanguageProvider>
       <SkinProvider>
-        <RouterProvider router={router} />
+        <PluginProvider>
+          <RouterProvider router={router} />
+        </PluginProvider>
       </SkinProvider>
     </LanguageProvider>
   );
@@ -62,7 +66,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </StrictMode>
 );
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-  console.log(message);
-});
