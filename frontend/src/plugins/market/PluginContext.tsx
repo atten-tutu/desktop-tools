@@ -42,6 +42,7 @@ const PluginProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
   ]);
 
   const addPlugin = (plugin: Plugin) => {
+    console.log('Received plugin:', plugin);
     setPlugins([...plugins, plugin]);
   };
 
