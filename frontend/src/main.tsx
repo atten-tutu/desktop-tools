@@ -14,6 +14,7 @@ import './index.css';
 import { LanguageProvider } from './i18n/i18n.tsx';
 import { SkinProvider } from './plugins/skin/context';
 import { PluginProvider } from './plugins/market/PluginContext';
+import { ThemeProvider } from './plugins/theme/theme';
 
 // 懒加载首页组件
 const LazyIndexRoute = React.lazy(() => import('./routes/index'));
@@ -51,11 +52,13 @@ declare module '@tanstack/react-router' {
 const AppWrapper = () => {
   return (
     <LanguageProvider>
-      <SkinProvider>
-        <PluginProvider>
-          <RouterProvider router={router} />
-        </PluginProvider>
-      </SkinProvider>
+      <ThemeProvider>
+        <SkinProvider>
+          <PluginProvider>
+            <RouterProvider router={router} />
+          </PluginProvider>
+        </SkinProvider>
+      </ThemeProvider>
     </LanguageProvider>
   );
 };

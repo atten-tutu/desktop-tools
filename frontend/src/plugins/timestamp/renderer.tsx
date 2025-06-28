@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Radio, Select, Input, Space, Tooltip } from '@arco-design/web-react';
+import { Radio, Select, Input, Space, Tooltip, DatePicker } from '@arco-design/web-react';
 import { DateTime } from 'luxon';
 import { IconCopy, IconPlayArrow, IconPause } from '@arco-design/web-react/icon';
 import Clock from 'react-clock';
@@ -20,8 +20,13 @@ const TimestampConverter: React.FC = () => {
   const { t } = useTimestampTranslation();
   const [timestampUnit, setTimestampUnit] = useState<'second' | 'millisecond'>('second');
   const [selectedZone, setSelectedZone] = useState<string>(DateTime.local().zoneName);
-  const [inputDateTime, setInputDateTime] = useState<string>('');
-  const [inputTimestamp, setInputTimestamp] = useState<string>('');
+  
+  // 分离两个转换方向的状态
+  const [dateTimeInput, setDateTimeInput] = useState<string>('');
+  const [timestampOutput, setTimestampOutput] = useState<string>('');
+  const [timestampInput, setTimestampInput] = useState<string>('');
+  const [dateTimeOutput, setDateTimeOutput] = useState<string>('');
+  
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [displayTime, setDisplayTime] = useState<string>('');
   const [displayTimestamp, setDisplayTimestamp] = useState<string>('');
@@ -68,25 +73,28 @@ const TimestampConverter: React.FC = () => {
 
     const updateDisplay = () => {
       if (isPaused && pausedDateTime) {
-        setDisplayTime(pausedDateTime.toFormat('yyyy-MM-dd HH:mm:ss'));
-        setDisplayTimestamp(
-          timestampUnit === 'second'
-            ? Math.floor(pausedDateTime.toSeconds()).toString()
-            : pausedDateTime.toMillis().toString()
-        );
+        // 暂停状态下使用暂停时的时间，使用ISO 8601格式
+        setDisplayTime(pausedDateTime.toFormat("yyyy-MM-dd'T'HH:mm:ss"));
+        // 时间戳是一个绝对值，与时区无关
+        const timestamp = timestampUnit === 'second'
+          ? Math.floor(pausedDateTime.toUTC().toSeconds())
+          : pausedDateTime.toUTC().toMillis();
+        setDisplayTimestamp(timestamp.toString());
       } else {
+        // 使用当前时间，并根据选定时区显示，使用ISO 8601格式
         const now = DateTime.now().setZone(selectedZone);
-        setDisplayTime(now.toFormat('yyyy-MM-dd HH:mm:ss'));
-        setDisplayTimestamp(
-          timestampUnit === 'second'
-            ? Math.floor(now.toSeconds()).toString()
-            : now.toMillis().toString()
-        );
+        setDisplayTime(now.toFormat("yyyy-MM-dd'T'HH:mm:ss"));
+        
+        // 时间戳是一个绝对值，与时区无关
+        const timestamp = timestampUnit === 'second'
+          ? Math.floor(now.toUTC().toSeconds())
+          : now.toUTC().toMillis();
+        setDisplayTimestamp(timestamp.toString());
       }
     };
 
     updateDisplay();
-    const timer = setInterval(updateDisplay, 1000);
+    const timer = setInterval(updateDisplay, 1000); // 更新频率为1秒
     return () => clearInterval(timer);
   }, [selectedZone, timestampUnit, isPaused, pausedDateTime]);
 
@@ -117,46 +125,60 @@ const TimestampConverter: React.FC = () => {
     });
   };
 
-  // 初始化 inputDateTime 和 inputTimestamp
+  // 初始化 dateTimeInput、timestampOutput 和 timestampInput、dateTimeOutput
   useEffect(() => {
     if (!selectedZone) return;
+    // 获取当前选定时区的今天开始时间
     const today = DateTime.now().setZone(selectedZone).startOf('day');
-    setInputDateTime(today.toFormat("yyyy-MM-dd'T'HH:mm"));
+    setDateTimeInput(today.toFormat("yyyy-MM-dd'T'HH:mm:ss"));
+    
+    // 时间戳是一个绝对值，与时区无关
     const timestamp = timestampUnit === 'second'
-      ? Math.floor(today.toSeconds())
-      : today.toMillis();
-    setInputTimestamp(timestamp.toString());
+      ? Math.floor(today.toUTC().toSeconds())
+      : today.toUTC().toMillis();
+    setTimestampOutput(timestamp.toString());
+    setTimestampInput(timestamp.toString());
+    
+    // 设置默认的时间戳转日期输出
+    const dt = timestampUnit === 'second'
+      ? DateTime.fromSeconds(timestamp).setZone(selectedZone)
+      : DateTime.fromMillis(timestamp).setZone(selectedZone);
+    setDateTimeOutput(dt.toFormat("yyyy-MM-dd'T'HH:mm:ss"));
   }, [selectedZone, timestampUnit]);
 
   const handleDateTimeChange = (value: string) => {
-    setInputDateTime(value);
+    setDateTimeInput(value);
     if (value) {
+      // 从ISO格式创建DateTime对象，并指定时区
       const dt = DateTime.fromISO(value, { zone: selectedZone });
       if (dt.isValid) {
+        // 计算时间戳
         const timestamp = timestampUnit === 'second'
-          ? Math.floor(dt.toSeconds())
-          : dt.toMillis();
-        setInputTimestamp(timestamp.toString());
+          ? Math.floor(dt.toUTC().toSeconds())
+          : dt.toUTC().toMillis();
+        setTimestampOutput(timestamp.toString());
       }
     } else {
-      setInputTimestamp('');
+      setTimestampOutput('');
     }
   };
 
   const handleTimestampChange = (value: string) => {
-    setInputTimestamp(value);
+    setTimestampInput(value);
     if (value) {
       const timestamp = parseInt(value);
       if (!isNaN(timestamp)) {
+        // 时间戳是一个绝对值，与时区无关
+        // 从时间戳创建UTC DateTime对象，然后转换到选定时区
         const dt = timestampUnit === 'second'
-          ? DateTime.fromSeconds(timestamp, { zone: selectedZone })
-          : DateTime.fromMillis(timestamp, { zone: selectedZone });
+          ? DateTime.fromSeconds(timestamp).setZone(selectedZone)
+          : DateTime.fromMillis(timestamp).setZone(selectedZone);
         if (dt.isValid) {
-          setInputDateTime(dt.toFormat("yyyy-MM-dd'T'HH:mm"));
+          setDateTimeOutput(dt.toFormat("yyyy-MM-dd'T'HH:mm:ss"));
         }
       }
     } else {
-      setInputDateTime('');
+      setDateTimeOutput('');
     }
   };
 
@@ -202,13 +224,14 @@ const TimestampConverter: React.FC = () => {
             <Space direction="vertical" style={{ width: '100%' }}>
               <Input
                 type="datetime-local"
-                value={inputDateTime}
+                step="1" // 支持秒级精度
+                value={dateTimeInput}
                 onChange={handleDateTimeChange}
               />
-              {inputTimestamp && (
+              {timestampOutput && (
                 <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp1'}>
-                  <div className="result" onClick={() => copyToClipboard(inputTimestamp, 'timestamp1')}>
-                    {inputTimestamp}
+                  <div className="result" onClick={() => copyToClipboard(timestampOutput, 'timestamp1')}>
+                    {timestampOutput}
                     <IconCopy />
                   </div>
                 </Tooltip>
@@ -219,14 +242,14 @@ const TimestampConverter: React.FC = () => {
             <h3>{t('timestamp_to_datetime')}</h3>
             <Space direction="vertical" style={{ width: '100%' }}>
               <Input
-                value={inputTimestamp}
+                value={timestampInput}
                 onChange={handleTimestampChange}
                 placeholder={t('enter_timestamp')}
               />
-              {inputDateTime && (
+              {dateTimeOutput && (
                 <Tooltip content={t('copied')} position="bottom" popupVisible={showCopiedTip === 'timestamp2'}>
-                  <div className="result" onClick={() => copyToClipboard(inputDateTime, 'timestamp2')}>
-                    {DateTime.fromISO(inputDateTime, { zone: selectedZone }).toFormat('yyyy-MM-dd HH:mm:ss')}
+                  <div className="result" onClick={() => copyToClipboard(dateTimeOutput, 'timestamp2')}>
+                    {dateTimeOutput}
                     <IconCopy />
                   </div>
                 </Tooltip>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeContext, ThemeProvider } from './theme';
+import { ThemeContext } from './theme';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@arco-design/web-react';
 import { useTranslation } from '../../i18n/i18n';
@@ -43,12 +43,10 @@ const App: React.FC = () => {
   const { t } = useTranslation();
   
   return (
-    <ThemeProvider>
-      <div className="theme-app-container">
-        <h1 className="theme-title">{t('theme')}</h1>
-        <ThemeSwitcher />
-      </div>
-    </ThemeProvider>
+    <div className="theme-app-container">
+      <h1 className="theme-title">{t('theme')}</h1>
+      <ThemeSwitcher />
+    </div>
   );
 };
 
