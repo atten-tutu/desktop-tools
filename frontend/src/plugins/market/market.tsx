@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../../i18n/i18n';
 import { Input, List, Card, Button } from '@arco-design/web-react';
-// 按需导入 IconSearch 图标
 import { IconSearch } from '@arco-design/web-react/icon'; 
 import { PluginProvider, usePluginContext } from './PluginContext';
 import { Link } from '@tanstack/react-router';
@@ -39,6 +38,9 @@ const AppMarket: React.FC = () => {
         value={searchText}
         onChange={(value) => setSearchText(value)}
       />
+      <Button onClick={() => window.location.href = '/add-plugin'}>
+        {t('add_plugin')}
+      </Button>
       <List
         dataSource={filteredPlugins}
         render={(item) => (
@@ -60,7 +62,7 @@ const AppMarket: React.FC = () => {
           </List.Item>
         )}
       />
-  <Link to="/" className="theme-app-container a">{t('back_to_home')}</Link>
+      <Link to="/" className="theme-app-container a">{t('back_to_home')}</Link>
     </div>
   );
 };
