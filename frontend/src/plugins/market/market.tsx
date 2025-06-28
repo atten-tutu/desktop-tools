@@ -4,33 +4,17 @@ import { useTranslation } from '../../i18n/i18n';
 import { Input, List, Card, Button } from '@arco-design/web-react';
 // 按需导入 IconSearch 图标
 import { IconSearch } from '@arco-design/web-react/icon'; 
-
-// 当前示例用本地添加数据
-//todo 由用户来上传这些数据
-const plugins = [
-  {
-    id: 1,
-    name: '主题插件',
-    description: '用于切换应用的主题',
-    version: '1.0.0',
-    changelog: '初始版本发布',
-    installed: false,
-  },
-  {
-    id: 2,
-    name: '时间戳转换插件',
-    description: '方便进行时间戳和日期的相互转换',
-    version: '1.1.0',
-    changelog: '优化转换算法，增加更多时区支持',
-    installed: false,
-  },
-];
+import { PluginProvider, usePluginContext } from './PluginContext';
+import { Link } from '@tanstack/react-router';
 
 // 应用市场组件
 const AppMarket: React.FC = () => {
   const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const [installedPlugins, setInstalledPlugins] = useState<number[]>([]);
+
+  // 使用 usePluginContext 获取 plugins
+  const { plugins } = usePluginContext();
 
   const filteredPlugins = plugins.filter((plugin) =>
     plugin.name.toLowerCase().includes(searchText.toLowerCase())
@@ -76,8 +60,17 @@ const AppMarket: React.FC = () => {
           </List.Item>
         )}
       />
+  <Link to="/" className="theme-app-container a">{t('back_to_home')}</Link>
     </div>
   );
 };
 
-export default AppMarket;
+const AppMarketWithProvider: React.FC = () => {
+  return (
+    <PluginProvider>
+      <AppMarket />
+    </PluginProvider>
+  );
+};
+
+export default AppMarketWithProvider;
