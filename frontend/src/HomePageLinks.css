@@ -1,0 +1,33 @@
+/* src/components/HomePageLinks.css */
+.scrollable-container {
+  max-height: 400px; /* 根据需要调整高度 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.link-space {
+  width: 100%;
+}
+
+.bubble-card {
+  border-radius: 20px; /* 气泡样式的圆角 */
+  text-align: center;
+  background-color: #646cff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.bubble-card:hover {
+  background-color: #535bf2;
+}
+
+.bubble-card a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 12px;
+}

@@ -1,3 +1,4 @@
+/* src/index.css */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,6 +12,31 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.homepage-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.left-content {
+  flex: 1;
+}
+
+.right-content {
+  margin-left: 20px; /* 可以根据需要调整间距 */
+}
+
+.icon-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 20px; /* 调整图标之间的间距 */
+}
+
+.settings-icon {
+  cursor: pointer;
 }
 
 a {
