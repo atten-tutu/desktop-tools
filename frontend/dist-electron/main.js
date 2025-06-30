@@ -17,6 +17,10 @@ function createMainWindow() {
     width: 800,
     height: 600,
     show: false,
+    autoHideMenuBar: true,
+    // 隐藏菜单栏
+    icon: path.join(process.env.APP_ROOT, "app-icon.ico"),
+    // 设置应用图标
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -28,6 +32,7 @@ function createMainWindow() {
   } else {
     mainWindow.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
+  setupMainWindowEvents();
 }
 function createFloatBallWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -42,6 +47,10 @@ function createFloatBallWindow() {
     skipTaskbar: true,
     resizable: false,
     transparent: true,
+    backgroundColor: "#00000000",
+    // 完全透明的背景
+    show: false,
+    // 初始不显示
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -49,6 +58,9 @@ function createFloatBallWindow() {
     }
   });
   floatBallWindow.loadURL(`${VITE_DEV_SERVER_URL}/float_ball`);
+  floatBallWindow.once("ready-to-show", () => {
+    floatBallWindow == null ? void 0 : floatBallWindow.show();
+  });
 }
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -59,20 +71,39 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) ;
 });
 app.whenReady().then(() => {
+  const iconPath = path.join(process.env.APP_ROOT, "app-icon.ico");
+  if (fs.existsSync(iconPath)) {
+    app.setAppUserModelId("com.desktop.tools");
+  }
   createMainWindow();
   createFloatBallWindow();
   globalShortcut.register("CommandOrControl+Shift+P", () => {
     if (!mainWindow) return;
     if (mainWindow.isVisible()) {
       mainWindow.hide();
+      showFloatBall();
     } else {
       mainWindow.show();
       mainWindow.focus();
+      hideFloatBall();
     }
   });
   ipcMain.on("toggle-main-window", () => {
     if (!mainWindow) return;
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+      showFloatBall();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+      hideFloatBall();
+    }
+  });
+  ipcMain.on("hide-float-ball", () => {
+    hideFloatBall();
+  });
+  ipcMain.on("show-float-ball", () => {
+    showFloatBall();
   });
   ipcMain.on("open-plugin", (event, pluginName) => {
     openPluginWindow(pluginName);
@@ -127,6 +158,30 @@ function getAllPlugins() {
     }
   }
   return result;
+}
+function showFloatBall() {
+  if (floatBallWindow && !floatBallWindow.isVisible()) {
+    floatBallWindow.show();
+  }
+}
+function hideFloatBall() {
+  if (floatBallWindow && floatBallWindow.isVisible()) {
+    floatBallWindow.hide();
+  }
+}
+function setupMainWindowEvents() {
+  if (!mainWindow) return;
+  mainWindow.on("close", (event) => {
+    event.preventDefault();
+    mainWindow == null ? void 0 : mainWindow.hide();
+    showFloatBall();
+  });
+  mainWindow.on("hide", () => {
+    showFloatBall();
+  });
+  mainWindow.on("show", () => {
+    hideFloatBall();
+  });
 }
 export {
   MAIN_DIST,

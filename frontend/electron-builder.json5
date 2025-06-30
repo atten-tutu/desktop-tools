@@ -1,21 +1,24 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "com.desktop.tools",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "Desktop Tools",
+  "icon": "app-icon.ico",
   "directories": {
     "output": "release/${version}"
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
+    "app-icon.ico"
   ],
   "mac": {
     "target": [
       "dmg"
     ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+    "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
+    "icon": "app-icon.ico"
   },
   "win": {
     "target": [
@@ -26,7 +29,8 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "icon": "app-icon.ico"
   },
   "nsis": {
     "oneClick": false,
@@ -38,6 +42,7 @@
     "target": [
       "AppImage"
     ],
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "icon": "app-icon.ico"
   }
 }
