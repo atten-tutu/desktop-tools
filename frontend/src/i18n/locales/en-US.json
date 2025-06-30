@@ -5,6 +5,7 @@
   "theme": "Theme",
   "name":"Name",
   "description":"Description",
+  "select_file":"Select File",
   "app_market": "App Market",
   "search_placeholder_for_market": "Search for plugins...",
   "version": "Version",
