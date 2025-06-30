@@ -2,8 +2,8 @@ import { Message } from '@arco-design/web-react';
 import { myFetch } from '../../utils/api-client';
 
 // 修改 API URL，添加 /api 前缀
-const API_URL = 'http://localhost:3771/api/upload-plugin';
-const ZIP_UPLOAD_API_URL = 'http://localhost:3771/api/upload-zip';
+const API_URL = 'http://47.110.158.139:3771/api/upload-plugin';
+const ZIP_UPLOAD_API_URL = 'http://47.110.158.139:3771/api/upload-zip';
 
 export const upload = async (plugin: any) => {
   try {

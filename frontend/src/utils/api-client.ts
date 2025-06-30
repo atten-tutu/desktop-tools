@@ -18,7 +18,7 @@ export const myFetch = ky.extend({
   throwHttpErrors: true,
 });
 
-const API_BASE_URL = "http://127.0.0.1:3771";
+const API_BASE_URL = "http://47.110.158.139:3771";
 
 export const apiClient = {
   get: async (url: string) => {
