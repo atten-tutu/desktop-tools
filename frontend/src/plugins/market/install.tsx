@@ -2,7 +2,7 @@ import { Message } from '@arco-design/web-react';
 import { myFetch } from '../../utils/api-client';
 
 // 修改 API URL，添加 /api 前缀
-const INSTALL_API_URL = 'http://localhost:3771/api/install-plugin';
+const INSTALL_API_URL = 'http://47.110.158.139:3771/api/install-plugin';
 
 export const installPlugin = async (pluginName: string) => {
   try {
