@@ -35,7 +35,7 @@ export default defineConfig({
     proxy: {
       // 将所有以 /api 开头的请求转发到本地 3771 端口
       '/api': {
-        target: 'http://47.110.158.139:3771',
+        target: 'http://localhost:3771',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

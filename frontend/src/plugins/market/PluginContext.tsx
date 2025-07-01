@@ -39,6 +39,14 @@ const PluginProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
       changelog: '优化转换算法，增加更多时区支持',
       installed: false,
     },
+    {
+      id:3,
+      name:'计算器Pro',
+      description:"计算",
+      version:"v1.0.1",
+      changelog:"init",
+      installed:true,
+    }
   ]);
 
   const addPlugin = (plugin: Plugin) => {
