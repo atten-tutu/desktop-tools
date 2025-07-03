@@ -21,6 +21,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   
 
 
-  // You can expose other APTs you need here.
-  // ...
+  // 插件入口调用
+  openPlugin: (pluginName: string) => ipcRenderer.invoke('open-plugin', pluginName),
 })

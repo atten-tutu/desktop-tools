@@ -1,0 +1,80 @@
+/* src/plugins/theme/index.css */
+
+/* 整体容器样式 */
+.theme-app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  /* 响应式设计 */
+  max-width: 30rem;
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* 主题标题样式 */
+.theme-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+/* 主题切换器容器样式 */
+.theme-switcher-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* 主题切换按钮样式 */
+.theme-app-container button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #646cff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+  max-width: 15rem;
+  margin-bottom: 10px;
+}
+
+.theme-app-container button:hover {
+  background-color: #535bf2;
+  transform: scale(1.05);
+}
+
+.theme-app-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 当前主题信息样式 */
+.theme-info {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* 链接样式 */
+.theme-app-container a {
+  color: #646cff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.theme-app-container a:hover {
+  color: #535bf2;
+  text-decoration: underline;
+}

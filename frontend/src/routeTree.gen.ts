@@ -9,14 +9,34 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimestampRouteImport } from './routes/timestamp'
+import { Route as ThemeRouteImport } from './routes/theme'
 import { Route as SnipasteRouteImport } from './routes/snipaste'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as Screen_shotRouteImport } from './routes/screen_shot'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
+import { Route as ClipboardRouteImport } from './routes/clipboard'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TimestampRoute = TimestampRouteImport.update({
+  id: '/timestamp',
+  path: '/timestamp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThemeRoute = ThemeRouteImport.update({
+  id: '/theme',
+  path: '/theme',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SnipasteRoute = SnipasteRouteImport.update({
   id: '/snipaste',
   path: '/snipaste',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Screen_shotRoute = Screen_shotRouteImport.update({
@@ -24,9 +44,19 @@ const Screen_shotRoute = Screen_shotRouteImport.update({
   path: '/screen_shot',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Float_ballRoute = Float_ballRouteImport.update({
   id: '/float_ball',
   path: '/float_ball',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClipboardRoute = ClipboardRouteImport.update({
+  id: '/clipboard',
+  path: '/clipboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,45 +67,114 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
+  '/settings': typeof SettingsRoute
   '/snipaste': typeof SnipasteRoute
+  '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
+  '/settings': typeof SettingsRoute
   '/snipaste': typeof SnipasteRoute
+  '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/clipboard': typeof ClipboardRoute
   '/float_ball': typeof Float_ballRoute
+  '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
+  '/settings': typeof SettingsRoute
   '/snipaste': typeof SnipasteRoute
+  '/theme': typeof ThemeRoute
+  '/timestamp': typeof TimestampRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/float_ball' | '/screen_shot' | '/snipaste'
+  fullPaths:
+    | '/'
+    | '/clipboard'
+    | '/float_ball'
+    | '/market'
+    | '/screen_shot'
+    | '/settings'
+    | '/snipaste'
+    | '/theme'
+    | '/timestamp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/float_ball' | '/screen_shot' | '/snipaste'
-  id: '__root__' | '/' | '/float_ball' | '/screen_shot' | '/snipaste'
+  to:
+    | '/'
+    | '/clipboard'
+    | '/float_ball'
+    | '/market'
+    | '/screen_shot'
+    | '/settings'
+    | '/snipaste'
+    | '/theme'
+    | '/timestamp'
+  id:
+    | '__root__'
+    | '/'
+    | '/clipboard'
+    | '/float_ball'
+    | '/market'
+    | '/screen_shot'
+    | '/settings'
+    | '/snipaste'
+    | '/theme'
+    | '/timestamp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClipboardRoute: typeof ClipboardRoute
   Float_ballRoute: typeof Float_ballRoute
+  MarketRoute: typeof MarketRoute
   Screen_shotRoute: typeof Screen_shotRoute
+  SettingsRoute: typeof SettingsRoute
   SnipasteRoute: typeof SnipasteRoute
+  ThemeRoute: typeof ThemeRoute
+  TimestampRoute: typeof TimestampRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timestamp': {
+      id: '/timestamp'
+      path: '/timestamp'
+      fullPath: '/timestamp'
+      preLoaderRoute: typeof TimestampRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/theme': {
+      id: '/theme'
+      path: '/theme'
+      fullPath: '/theme'
+      preLoaderRoute: typeof ThemeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/snipaste': {
       id: '/snipaste'
       path: '/snipaste'
       fullPath: '/snipaste'
       preLoaderRoute: typeof SnipasteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/screen_shot': {
@@ -85,11 +184,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Screen_shotRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/float_ball': {
       id: '/float_ball'
       path: '/float_ball'
       fullPath: '/float_ball'
       preLoaderRoute: typeof Float_ballRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clipboard': {
+      id: '/clipboard'
+      path: '/clipboard'
+      fullPath: '/clipboard'
+      preLoaderRoute: typeof ClipboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,9 +217,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClipboardRoute: ClipboardRoute,
   Float_ballRoute: Float_ballRoute,
+  MarketRoute: MarketRoute,
   Screen_shotRoute: Screen_shotRoute,
+  SettingsRoute: SettingsRoute,
   SnipasteRoute: SnipasteRoute,
+  ThemeRoute: ThemeRoute,
+  TimestampRoute: TimestampRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,263 @@
+.timestamp-plugin {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-1);
+}
+
+body.light .timestamp-plugin {
+  --color-success: #4CAF50;
+  --color-danger: #f44336;
+  --color-click-bg: rgba(0, 0, 0, 0.05);
+}
+
+body.dark .timestamp-plugin {
+  --color-success: #66bb6a;
+  --color-danger: #ef5350;
+  --color-click-bg: rgba(255, 255, 255, 0.1);
+}
+
+.timestamp-converter {
+  display: flex;
+  padding: 20px;
+  gap: 40px;
+  height: 100%;
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: var(--color-bg-2);
+  border-radius: 4px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.converter-section {
+  background-color: var(--color-bg-2);
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.converter-section h3 {
+  margin: 0 0 16px 0;
+  color: var(--color-text-1);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--color-bg-1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--color-text-1);
+  user-select: none;
+  position: relative;
+}
+
+.result:hover {
+  background-color: var(--color-fill-2);
+}
+
+.result:active {
+  background-color: var(--color-click-bg);
+  transform: scale(0.98);
+}
+
+.result::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.result:focus-visible::after {
+  border-color: var(--color-text-2);
+}
+
+.clock-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.current-time-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.clock-control {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  cursor: pointer;
+  color: var(--color-text-2);
+  transition: color 0.2s;
+}
+
+.clock-control:hover {
+  color: var(--color-text-1);
+}
+
+.play-icon,
+.pause-icon {
+  font-size: 24px;
+}
+
+.play-icon {
+  color: var(--color-success);
+}
+
+.pause-icon {
+  color: var(--color-danger);
+}
+
+/* 时钟主题样式 */
+.react-clock {
+  background: transparent !important;
+}
+
+body.light .react-clock__face {
+  border-color: #888 !important;
+}
+
+body.light .react-clock__hand__body {
+  background-color: #222 !important;
+}
+
+body.light .react-clock__mark__body {
+  background-color: #888 !important;
+}
+
+body.light .react-clock__mark__number {
+  color: #222 !important;
+}
+
+body.dark .react-clock__face {
+  border-color: #aaa !important;
+}
+
+body.dark .react-clock__hand__body {
+  background-color: #fff !important;
+}
+
+body.dark .react-clock__mark__body {
+  background-color: #aaa !important;
+}
+
+body.dark .react-clock__mark__number {
+  color: #fff !important;
+}
+
+/* 秒针颜色保持不变 */
+.react-clock__second-hand__body {
+  background-color: #f53f3f !important;
+}
+
+/* 时钟主题适配 */
+body.dark .react-clock {
+  --clock-face-border-color: rgba(255,255,255,0.3);
+  --clock-hand-color: rgba(255,255,255,0.8);
+  background: transparent;
+}
+
+body.dark .react-clock__face {
+  border-color: var(--clock-face-border-color) !important;
+}
+
+body.dark .react-clock__hand__body {
+  background-color: var(--clock-hand-color) !important;
+}
+
+body.dark .react-clock__mark__body {
+  background-color: var(--clock-face-border-color) !important;
+}
+
+/* Select组件浅色主题覆盖 */
+.timestamp-plugin .arco-select {
+  background-color: var(--color-bg-1) !important;
+  border-color: var(--color-fill-2) !important;
+}
+
+.timestamp-plugin .arco-select:hover {
+  background-color: var(--color-bg-1) !important;
+  border-color: var(--color-text-2) !important;
+}
+
+.timestamp-plugin .arco-select-view {
+  background-color: #fff !important;
+  border-color: #e5e6eb !important;
+}
+
+.timestamp-plugin .arco-select-view:hover {
+  background-color: #fff !important;
+  border-color: #888 !important;
+}
+
+.timestamp-plugin .arco-select-view-value {
+  color: #333 !important;
+}
+
+/* Select下拉选项浅色主题 */
+.arco-select-popup {
+  background-color: #fff !important;
+  border-color: #e5e6eb !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.arco-select-popup-inner {
+  background-color: #fff !important;
+}
+
+.arco-select-option {
+  color: #333 !important;
+  background-color: transparent !important;
+}
+
+.arco-select-option:hover {
+  background-color: #f2f3f5 !important;
+}
+
+.arco-select-option-selected {
+  color: rgb(var(--primary-6)) !important;
+  font-weight: 500;
+  background-color: rgb(var(--primary-1)) !important;
+}
+
+/* 下拉框滚动条样式 */
+.arco-select-popup ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.arco-select-popup ::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.arco-select-popup ::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 4px;
+} 
