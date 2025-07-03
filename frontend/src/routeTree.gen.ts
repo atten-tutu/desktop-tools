@@ -16,6 +16,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as Screen_shotRouteImport } from './routes/screen_shot'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as Float_ballRouteImport } from './routes/float_ball'
+import { Route as DevRouteImport } from './routes/dev'
 import { Route as ClipboardRouteImport } from './routes/clipboard'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -54,6 +55,11 @@ const Float_ballRoute = Float_ballRouteImport.update({
   path: '/float_ball',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DevRoute = DevRouteImport.update({
+  id: '/dev',
+  path: '/dev',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClipboardRoute = ClipboardRouteImport.update({
   id: '/clipboard',
   path: '/clipboard',
@@ -68,6 +74,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/clipboard': typeof ClipboardRoute
+  '/dev': typeof DevRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/clipboard': typeof ClipboardRoute
+  '/dev': typeof DevRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/clipboard': typeof ClipboardRoute
+  '/dev': typeof DevRoute
   '/float_ball': typeof Float_ballRoute
   '/market': typeof MarketRoute
   '/screen_shot': typeof Screen_shotRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/clipboard'
+    | '/dev'
     | '/float_ball'
     | '/market'
     | '/screen_shot'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/clipboard'
+    | '/dev'
     | '/float_ball'
     | '/market'
     | '/screen_shot'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/clipboard'
+    | '/dev'
     | '/float_ball'
     | '/market'
     | '/screen_shot'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ClipboardRoute: typeof ClipboardRoute
+  DevRoute: typeof DevRoute
   Float_ballRoute: typeof Float_ballRoute
   MarketRoute: typeof MarketRoute
   Screen_shotRoute: typeof Screen_shotRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Float_ballRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dev': {
+      id: '/dev'
+      path: '/dev'
+      fullPath: '/dev'
+      preLoaderRoute: typeof DevRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/clipboard': {
       id: '/clipboard'
       path: '/clipboard'
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ClipboardRoute: ClipboardRoute,
+  DevRoute: DevRoute,
   Float_ballRoute: Float_ballRoute,
   MarketRoute: MarketRoute,
   Screen_shotRoute: Screen_shotRoute,

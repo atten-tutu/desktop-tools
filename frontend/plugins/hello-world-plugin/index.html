@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World Plugin</title>
+    <style>
+      body {
+        font-family: system-ui;
+        text-align: center;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello, Rubick!</h1>
+    <p>This is a simple Rubick plugin.</p>
+    <button id="notify">Show Notification</button>
+
+    <script>
+      document.getElementById('notify').addEventListener('click', function () {
+        if (window.rubick?.showNotification) {
+          window.rubick.showNotification('Hello from the plugin!');
+        } else {
+          alert('rubick.showNotification not found');
+        }
+      });
+
+      window.rubick?.onPluginEnter((data) => {
+        console.log('✅ Plugin entered:', data);
+      });
+
+      window.rubick?.onPluginOut(() => {
+        console.log('👋 Plugin closing...');
+      });
+    </script>
+  </body>
+</html>

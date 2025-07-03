@@ -7,6 +7,7 @@ import {
   nativeTheme,
   screen,
 } from 'electron';
+
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -16,7 +17,7 @@ import { session } from 'electron';
 // @ts-ignore
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-console.log('preload path:', path.join(__dirname, 'preload.js'));
+console.log('preload path:', path.join(__dirname, 'preload.mjs'));
 
 // The built directory structure
 //
@@ -90,7 +91,7 @@ function createFloatBallWindow() {
     resizable: false,
     transparent: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
       contextIsolation: false,
     },
@@ -189,7 +190,7 @@ ipcMain.handle('open-screenshot-editor', async (event, base64Image: string) => {
     alwaysOnTop: true,
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       contextIsolation: false,
     },
   });
@@ -229,9 +230,9 @@ function openPluginWindow(pluginName: string) {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.mjs'),
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
   win.loadFile(pluginHtml);

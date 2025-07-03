@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@arco-design/web-react": "^2.66.1",
+    "@electron/remote": "^2.1.2",
     "@tanstack/react-query": "^5.80.7",
     "@tanstack/react-router": "^1.121.0",
     "ky": "^1.8.1",
@@ -43,5 +44,9 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js"
+  "main": "dist-electron/main.js",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

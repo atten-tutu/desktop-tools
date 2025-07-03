@@ -1,0 +1,12 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "A simple hello world plugin for Rubick",
+  "main": "index.html",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": [
+    "rubick",
+    "plugin"
+  ]
+}

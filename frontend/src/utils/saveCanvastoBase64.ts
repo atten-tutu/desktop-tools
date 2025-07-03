@@ -1,7 +1,7 @@
 /**
  * 将指定区域的canvas转换为base64格式的图片
  */
-import { getCanvas2dCtx } from "./CanvasPatch";
+import { getCanvas2dCtx } from './canvasPatch';
 
 export function saveCanvasToBase64(
   context: CanvasRenderingContext2D,
@@ -22,7 +22,7 @@ export function saveCanvasToBase64(
     height * dpr
   );
   // 创建canvas标签，用于存放裁剪区域的图片
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   // 获取裁剪框区域画布
   const imgContext = getCanvas2dCtx(canvas, width, height);
   if (imgContext) {
@@ -31,23 +31,23 @@ export function saveCanvasToBase64(
     if (writeBase64) {
       // 将图片自动添加至剪贴板中
       canvas?.toBlob(
-        blob => {
+        (blob) => {
           if (blob == null) return;
           const Clipboard = window.ClipboardItem;
           // 浏览器不支持Clipboard
-          if (Clipboard == null) return canvas.toDataURL("png");
+          if (Clipboard == null) return canvas.toDataURL('png');
           const clipboardItem = new Clipboard({
-            [blob.type]: blob
+            [blob.type]: blob,
           });
           navigator.clipboard?.write([clipboardItem]).then(() => {
-            return "写入成功";
+            return '写入成功';
           });
         },
-        "image/png",
+        'image/png',
         quality
       );
     }
-    return canvas.toDataURL("png");
+    return canvas.toDataURL('png');
   }
-  return "";
+  return '';
 }

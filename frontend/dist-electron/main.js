@@ -5,7 +5,7 @@ import path from "node:path";
 import fs from "fs";
 createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-console.log("preload path:", path.join(__dirname, "preload.js"));
+console.log("preload path:", path.join(__dirname, "preload.mjs"));
 process.env.APP_ROOT = path.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
@@ -58,7 +58,7 @@ function createFloatBallWindow() {
     resizable: false,
     transparent: true,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.mjs"),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -144,7 +144,7 @@ ipcMain.handle("open-screenshot-editor", async (event, base64Image) => {
     alwaysOnTop: true,
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       contextIsolation: false
     }
   });
@@ -177,9 +177,9 @@ function openPluginWindow(pluginName) {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true,
-      contextIsolation: false
+      preload: path.join(__dirname, "preload.mjs"),
+      nodeIntegration: false,
+      contextIsolation: true
     }
   });
   win2.loadFile(pluginHtml);
