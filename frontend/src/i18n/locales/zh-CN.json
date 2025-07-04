@@ -6,6 +6,7 @@
   "theme": "主题",
   "name":"名称",
   "description":"描述",
+  "select_file":"选择文件",
   "app_market": "应用市场",
   "search_placeholder_for_market": "请输入插件名称搜索...",
   "version": "版本",

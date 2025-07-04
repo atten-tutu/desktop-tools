@@ -1,10 +1,11 @@
 // src/plugins/market/market.tsx
 import React, { useState } from 'react';
 import { useTranslation } from '../../i18n/i18n';
-import { Input, List, Card, Button } from '@arco-design/web-react';
+import { Input, List, Card, Button, Message } from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon'; 
 import { PluginProvider, usePluginContext } from './PluginContext';
 import { Link } from '@tanstack/react-router';
+import { installPlugin } from './install';
 
 // 应用市场组件
 const AppMarket: React.FC = () => {
@@ -19,9 +20,17 @@ const AppMarket: React.FC = () => {
     plugin.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const handleInstall = (pluginId: number) => {
-    setInstalledPlugins([...installedPlugins, pluginId]);
-    // 这里可以添加实际的安装逻辑
+  const handleInstall = async (pluginId: number) => {
+    const pluginToInstall = plugins.find(plugin => plugin.id === pluginId);
+    if (pluginToInstall) {
+      try {
+        await installPlugin(pluginToInstall.name);
+        setInstalledPlugins([...installedPlugins, pluginId]);
+        Message.success(`${pluginToInstall.name} 插件安装成功`);
+      } catch (error) {
+        Message.error(`${pluginToInstall.name} 插件安装失败，请稍后重试`);
+      }
+    }
   };
 
   const handleUninstall = (pluginId: number) => {

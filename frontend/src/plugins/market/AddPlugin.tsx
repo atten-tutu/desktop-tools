@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../../i18n/i18n';
-import { Form, Input, Button } from '@arco-design/web-react';
+import { Form, Input, Button, Upload } from '@arco-design/web-react';
 import { usePluginContext } from './PluginContext';
 import { Link } from '@tanstack/react-router';
-import { upload } from './upload';
+import { upload, uploadZip } from './upload';
 
 const AddPlugin: React.FC = () => {
   const { t } = useTranslation();
@@ -13,8 +13,9 @@ const AddPlugin: React.FC = () => {
   const [description, setDescription] = useState('');
   const [version, setVersion] = useState('');
   const [changelog, setChangelog] = useState('');
+  const [zipFile, setZipFile] = useState<File | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newPlugin = {
       id: Date.now(), // 使用当前时间戳作为临时 ID
       // 使用状态变量的值来创建 newPlugin 对象
@@ -25,9 +26,19 @@ const AddPlugin: React.FC = () => {
       installed: false
     };
     addPlugin(newPlugin);
-    // todo: 未实现逻辑 upload
-    upload(newPlugin); 
+    await upload(newPlugin); 
+
+    if (zipFile) {
+      await uploadZip(zipFile);
+    }
+
     window.location.href = '/market';
+  };
+
+  const handleFileChange = (info: any) => {
+    if (info.file.status === 'done') {
+      setZipFile(info.file.originFileObj);
+    }
   };
 
   return (
@@ -35,20 +46,25 @@ const AddPlugin: React.FC = () => {
       <h2>{t('add_plugin')}</h2>
       <Form layout="vertical">
         <Form.Item label={t('name')}>
-          {/* 修改 onChange 事件处理函数，接收 value 参数 */}
           <Input value={name} onChange={(value) => setName(value)} />
         </Form.Item>
         <Form.Item label={t('description')}>
-          {/* 修改 onChange 事件处理函数，接收 value 参数 */}
           <Input value={description} onChange={(value) => setDescription(value)} />
         </Form.Item>
         <Form.Item label={t('version')}>
-          {/* 修改 onChange 事件处理函数，接收 value 参数 */}
           <Input value={version} onChange={(value) => setVersion(value)} />
         </Form.Item>
         <Form.Item label={t('changelog')}>
-          {/* 修改 onChange 事件处理函数，接收 value 参数 */}
           <Input value={changelog} onChange={(value) => setChangelog(value)} />
+        </Form.Item>
+        <Form.Item label="插件压缩包">
+          <Upload
+            action="#"
+            onChange={handleFileChange}
+            showUploadList={false}
+          >
+            <Button>{t('select_file')}</Button>
+          </Upload>
         </Form.Item>
         <Form.Item>
           <Button onClick={handleSubmit}>{t('save')}</Button>
