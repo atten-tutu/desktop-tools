@@ -8,6 +8,7 @@ import { useState } from 'react';
 import Search from '../plugins/search/search';
 import HomePageLinks from '@/homepagelinks';
 import { IconSettings, IconList } from '@arco-design/web-react/icon';
+import { useSkin } from '@/plugins/skin/context';
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -17,23 +18,24 @@ export default function App() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showLinks, setShowLinks] = useState(false); // 初始状态设置为 false
+  const { primaryColor } = useSkin();
 
   const toggleLinks = () => {
     setShowLinks(!showLinks);
   };
 
   return (
-    <div className="homepage-container">
+    <div className="homepage-container" style={{ width: '100vw', height: '100vh', backgroundColor: 'var(--color-bg-1)' }}>
       <div className="left-content">
         <div className={`home-page-links ${showLinks ? 'show' : 'hide'}`} style={{ display: showLinks ? 'block' : 'none' }}>
           <HomePageLinks />
         </div>
         <div className="icon-container">
           <div className="settings-icon" onClick={toggleLinks}>
-            <IconList style={{ fontSize: 24, color: '#646cff' }} />
+            <IconList style={{ fontSize: 24, color: primaryColor }} />
           </div>
           <Link to="/settings" className="settings-icon">
-            <IconSettings style={{ fontSize: 24, color: '#646cff' }} />
+            <IconSettings style={{ fontSize: 24, color: primaryColor }} />
           </Link>
         </div>
       </div>

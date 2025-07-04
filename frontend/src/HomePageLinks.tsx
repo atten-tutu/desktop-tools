@@ -1,12 +1,13 @@
 // src/components/HomePageLinks.tsx
 import React from 'react';
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from './i18n/i18n';
-import { Card, Space } from '@arco-design/web-react';
+import { Space, Button } from '@arco-design/web-react';
 import './HomePageLinks.css';
 
 const HomePageLinks: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const links = [
     { to: '/theme', label: t('theme') },
@@ -21,9 +22,20 @@ const HomePageLinks: React.FC = () => {
     <div className="scrollable-container">
       <Space direction="vertical" size="large" className="link-space">
         {links.map((link, index) => (
-          <Card key={index} className="bubble-card">
-            <Link to={link.to}>{link.label}</Link>
-          </Card>
+          <Button
+            key={index}
+            type="primary"
+            style={{
+              width: '100%',
+              borderRadius: '20px',
+              padding: '12px',
+              height: '60px',
+              fontSize: '16px'
+            }}
+            onClick={() => navigate({ to: link.to })}
+          >
+            {link.label}
+          </Button>
         ))}
       </Space>
     </div>
