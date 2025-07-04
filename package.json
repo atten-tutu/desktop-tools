@@ -38,7 +38,7 @@
     "eslint": "^9.28.0",
     "eslint-plugin-react": "^7.37.5",
     "turbo": "^2.5.4",
-    "typescript": "catalog:"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@arco-design/web-react": "^2.66.1",
