@@ -64,5 +64,22 @@
   "type_message": "Type a message...",
   "drag_files_here": "Drag files here to upload",
   "no_files_selected": "No files selected",
-  "send": "Send"
+  "send": "Send",
+  
+  "lan_share_settings": "LAN Share Settings",
+  "custom_hostname": "Custom Hostname",
+  "custom_hostname_tooltip": "Set a custom name for your device (visible to others)",
+  "please_input_hostname": "Please input hostname",
+  "enter_custom_hostname": "Enter custom hostname",
+  "port": "Port",
+  "port_tooltip": "The port number for LAN Share service (1024-65535)",
+  "please_input_port": "Please input port number",
+  "port_range_error": "Port must be between 1024 and 65535",
+  "enter_port": "Enter port number",
+  "save_path": "Save Path",
+  "save_path_tooltip": "Directory where received files will be saved",
+  "please_select_save_path": "Please select save path",
+  "select_save_path": "Select save path",
+  "settings_saved": "Settings saved successfully",
+  "failed_to_select_directory": "Failed to select directory"
 } 

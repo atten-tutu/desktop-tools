@@ -1,5 +1,6 @@
 // LAN Share API 封装
 import { Message } from '@arco-design/web-react';
+import { ipcRenderer } from 'electron';
 
 // 设备信息类型
 export interface DeviceInfo {
@@ -32,6 +33,16 @@ export interface MessageData {
 class LanShareApi {
   private serviceRunning = false;
   private secretCode = '';
+  
+  // 获取本机名称
+  getHostname(): Promise<string> {
+    return ipcRenderer.invoke('get-hostname');
+  }
+  
+  // 获取本机 IP 地址
+  getIp(): Promise<string> {
+    return ipcRenderer.invoke('get-ip');
+  }
   
   // 获取服务状态
   getServiceStatus(): boolean {

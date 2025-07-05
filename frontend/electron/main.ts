@@ -1,9 +1,11 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, screen  } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, screen, dialog } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'fs';
 import { initialize, enable } from '@electron/remote/main';
+import { networkInterfaces } from 'os';
+import { hostname } from 'os';
 
 initialize();
 
@@ -252,4 +254,39 @@ function setupMainWindowEvents() {
     hideFloatBall()
   })
 }
+
+// 获取本机名称
+ipcMain.handle('get-hostname', async () => {
+  return hostname();
+});
+
+// 获取本机 IP 地址
+ipcMain.handle('get-ip', async () => {
+  const nets = networkInterfaces();
+  const results = [];
+  for (const name of Object.keys(nets)) {
+    const net = nets[name];
+    if (net) { // 确保 net 不为 undefined
+      for (const n of net) {
+        // 只处理 IPv4 地址
+        if (n.family === 'IPv4' && !n.internal) {
+          results.push(n.address);
+        }
+      }
+    }
+  }
+  return results.length > 0 ? results[0] : 'No IP found';
+});
+
+// 选择目录
+ipcMain.handle('select-directory', async () => {
+  return dialog.showOpenDialog({
+    properties: ['openDirectory', 'createDirectory']
+  });
+});
+
+// 获取下载文件夹路径
+ipcMain.handle('get-downloads-path', async () => {
+  return app.getPath('downloads');
+});
 

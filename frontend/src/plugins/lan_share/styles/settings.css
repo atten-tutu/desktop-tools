@@ -1,0 +1,20 @@
+.settings-container {
+  padding: 20px;
+  background-color: var(--color-bg-1);
+  border-radius: 4px;
+  height: 100%;
+}
+
+.settings-title {
+  margin-bottom: 24px;
+  font-size: 20px;
+  color: var(--color-text-1);
+}
+
+.settings-form {
+  max-width: 600px;
+}
+
+.settings-form .arco-form-item {
+  margin-bottom: 24px;
+}

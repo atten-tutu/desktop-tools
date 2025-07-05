@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Tabs, Button, Badge, Layout, Modal } from '@arco-design/web-react';
 import { IconHome, IconPoweroff, IconSettings } from '@arco-design/web-react/icon';
@@ -17,6 +17,15 @@ const LanSharePlugin: React.FC = () => {
   const { isServiceRunning, toggleService } = useLanShare();
   const { primaryColor } = useSkin();
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const settingsFormRef = useRef<{ submit: () => void }>(null);
+  
+  // 保存设置
+  const handleSaveSettings = () => {
+    if (settingsFormRef.current) {
+      settingsFormRef.current.submit();
+      setSettingsVisible(false);
+    }
+  };
 
   return (
     <Layout style={{ height: '100vh', width: '100vw' }}>    
@@ -46,14 +55,15 @@ const LanSharePlugin: React.FC = () => {
       </Content>
 
       <Modal
-        title={t('settings')}
+        title="设置"
         visible={settingsVisible}
-        onOk={() => setSettingsVisible(false)}
+        onOk={handleSaveSettings}
+        okText="保存"
         onCancel={() => setSettingsVisible(false)}
         autoFocus={false}
         maskClosable={false}
       >
-        <Settings />
+        <Settings formRef={settingsFormRef} />
       </Modal>
     </Layout>
   );

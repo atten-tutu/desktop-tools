@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Empty, Message } from '@arco-design/web-react';
-import { IconFile, IconCheck, IconClose } from '@arco-design/web-react/icon';
+import { Message } from '@arco-design/web-react';
+import { IconFile, IconCheck, IconClose, IconWifi } from '@arco-design/web-react/icon';
 import { useTranslation } from '../../../i18n/i18n';
 import { useLanShare } from '../context/LanShareContext';
 import type { MessageData } from '../api';
@@ -8,7 +8,7 @@ import '../styles/chat_interface.css';
 
 const ChatInterface: React.FC = () => {
   const { t } = useTranslation();
-  const { messages, sendMessage, sendFile: apiSendFile } = useLanShare();
+  const { messages, sendMessage, sendFile: apiSendFile, hostname, ip, port } = useLanShare();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -110,6 +110,9 @@ const ChatInterface: React.FC = () => {
           )}
           
           <div className="message-footer">
+            {message.isOutgoing && (
+              <span className="device-name-footer">{hostname}</span>
+            )}
             <span className="timestamp">{formatTime(message.timestamp)}</span>
             {message.isOutgoing && (
               <span className="status-icon">{statusIcon()}</span>
@@ -124,25 +127,35 @@ const ChatInterface: React.FC = () => {
     <div 
       ref={containerRef}
       className={`chat-container ${isFocused ? 'focused' : ''}`}
-      tabIndex={0} // 使容器可聚焦
+      tabIndex={0}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       onPaste={handlePaste}
     >
-      <div className="messages-container">
-        {messages.length === 0 ? (
-          <Empty
-            className="empty-message"
-            description={t('no_messages')}
-          />
-        ) : (
-          <>
-            {messages.map(message => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
-            <div ref={messagesEndRef} />
-          </>
-        )}
+      <div className="messages-wrapper">
+        {/* 固定的背景网络信息 */}
+        <div className="network-info-background">
+          <IconWifi className="network-icon-background" />
+          <div className="network-text-background">
+            {hostname} {ip}:{port}
+          </div>
+        </div>
+        
+        {/* 可滚动的消息区域 */}
+        <div className="messages-container">
+          {messages.length === 0 ? (
+            <div className="empty-messages-container">
+              {/* 空白区域，不显示任何内容 */}
+            </div>
+          ) : (
+            <>
+              {messages.map(message => (
+                <MessageBubble key={message.id} message={message} />
+              ))}
+              <div ref={messagesEndRef} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

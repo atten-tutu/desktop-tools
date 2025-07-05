@@ -1,9 +1,10 @@
-import require$$3, { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
+import require$$3, { app, BrowserWindow, globalShortcut, ipcMain, dialog, screen } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import fs from "fs";
 import require$$0 from "events";
+import { hostname, networkInterfaces } from "os";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 var main$1 = {};
 var server = { exports: {} };
@@ -880,6 +881,32 @@ function setupMainWindowEvents() {
     hideFloatBall();
   });
 }
+ipcMain.handle("get-hostname", async () => {
+  return hostname();
+});
+ipcMain.handle("get-ip", async () => {
+  const nets = networkInterfaces();
+  const results = [];
+  for (const name of Object.keys(nets)) {
+    const net = nets[name];
+    if (net) {
+      for (const n of net) {
+        if (n.family === "IPv4" && !n.internal) {
+          results.push(n.address);
+        }
+      }
+    }
+  }
+  return results.length > 0 ? results[0] : "No IP found";
+});
+ipcMain.handle("select-directory", async () => {
+  return dialog.showOpenDialog({
+    properties: ["openDirectory", "createDirectory"]
+  });
+});
+ipcMain.handle("get-downloads-path", async () => {
+  return app.getPath("downloads");
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
