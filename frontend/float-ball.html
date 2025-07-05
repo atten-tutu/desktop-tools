@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Float Ball</title>
+  <style>
+    /* 悬浮球样式 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      background: transparent !important;
+    }
+
+    html::-webkit-scrollbar, 
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    #root {
+      background: transparent !important;
+    }
+
+    .float-ball-wrapper {
+      width: 100px;
+      height: 100px;
+      background-color: transparent !important;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      box-sizing: border-box;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .float-ball-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .float-ball {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 16px;
+      cursor: grab;
+      user-select: none;
+      box-sizing: border-box;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transform-origin: center;
+      will-change: transform;
+      position: relative;
+    }
+
+    .float-ball:active {
+      cursor: grabbing;
+    }
+
+    /* 普通状态下的悬停效果保留 */
+    .float-ball:hover {
+      transform: scale(0.9);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    .float-ball-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .float-ball-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+
+    .float-ball-text {
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.9;
+      line-height: 1;
+    }
+
+    .float-ball-wrapper.attached-left {
+      transform: translateX(-50px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .float-ball-wrapper.attached-right {
+      transform: translateX(50px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .float-ball-wrapper.attached-top {
+      transform: translateY(-50px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .float-ball-wrapper.attached-bottom {
+      transform: translateY(50px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .float-ball-wrapper.attached-left:hover {
+      transform: translateX(-10px);
+    }
+
+    .float-ball-wrapper.attached-right:hover {
+      transform: translateX(10px);
+    }
+
+    .float-ball-wrapper.attached-top:hover {
+      transform: translateY(-10px);
+    }
+
+    .float-ball-wrapper.attached-bottom:hover {
+      transform: translateY(10px);
+    } 
+
+    .float-ball-wrapper * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .float-ball-wrapper *::-webkit-scrollbar {
+      display: none;
+    }
+
+    .float-ball-wrapper.dragging {
+      cursor: grabbing;
+    }
+
+    .float-ball-wrapper.dragging .float-ball {
+      cursor: grabbing;
+      opacity: 0.8;
+      transform: scale(0.9) !important;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .float-ball-wrapper.dragging .float-ball:hover {
+      transform: scale(0.9) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="float-ball-wrapper" id="floatBallWrapper">
+      <div id="floatBall" class="float-ball">
+        <div class="float-ball-content">
+          <div class="float-ball-icon">⚡</div>
+          <div class="float-ball-text">工具</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 获取元素
+    const floatBallWrapper = document.getElementById('floatBallWrapper');
+    const floatBall = document.getElementById('floatBall');
+    let isDragging = false;
+    let isAttached = false;
+    let attachDirection = null;
+    let bias = { x: 0, y: 0 };
+    
+    // 用于区分拖拽和点击
+    let wasDragged = false;
+    let startPos = { x: 0, y: 0 };
+    const dragThreshold = 5; // 5像素的移动才算拖拽
+    
+    // 获取electron对象
+    const { ipcRenderer } = require('electron');
+    
+    // 拖拽相关
+    floatBall.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // 只处理左键
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      isDragging = true;
+      wasDragged = false; // 重置拖拽状态
+      floatBallWrapper.classList.add('dragging');
+      
+      // 记录开始位置，用于判断是否拖拽
+      startPos = { x: e.screenX, y: e.screenY };
+      
+      // 获取当前窗口和鼠标位置
+      const remote = require('@electron/remote');
+      const win = remote.getCurrentWindow();
+      const [currentX, currentY] = win.getPosition();
+      
+      bias = { 
+        x: e.screenX - currentX, 
+        y: e.screenY - currentY 
+      };
+      
+      // 添加全局事件监听器
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    });
+    
+    function handleMouseUp(e) {
+      isDragging = false;
+      floatBallWrapper.classList.remove('dragging');
+      
+      // 移除全局事件监听器
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      
+      // 检查是否需要吸附到边缘
+      setTimeout(checkEdgeAttachment, 100);
+      
+      // 如果没有拖拽，处理点击事件
+      if (!wasDragged) {
+        handleClick(e);
+      }
+    }
+    
+    function handleMouseMove(e) {
+      if (!isDragging) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // 检查是否超过拖拽阈值
+      const dx = Math.abs(e.screenX - startPos.x);
+      const dy = Math.abs(e.screenY - startPos.y);
+      if (dx > dragThreshold || dy > dragThreshold) {
+        wasDragged = true;
+      }
+      
+      const remote = require('@electron/remote');
+      const win = remote.getCurrentWindow();
+      
+      const newX = e.screenX - bias.x;
+      const newY = e.screenY - bias.y;
+      
+      // 临时移除吸附状态
+      resetAttachment();
+      
+      try {
+        win.setPosition(newX, newY);
+      } catch (error) {
+        console.error('Error setting position:', error);
+      }
+    }
+    
+    function checkEdgeAttachment() {
+      try {
+        const remote = require('@electron/remote');
+        const win = remote.getCurrentWindow();
+        const [x, y] = win.getPosition();
+        const { width, height } = remote.screen.getPrimaryDisplay().workAreaSize;
+        
+        const ballSize = 100;
+        const attachmentThreshold = 20; // 距离边缘多少像素时开始吸附
+        const hoverMargin = 10; // 为悬停效果留出的边距
+        
+        // 重置吸附状态
+        resetAttachment();
+        
+        // 检查左边缘
+        if (x <= attachmentThreshold) {
+          isAttached = true;
+          attachDirection = 'left';
+          win.setPosition(hoverMargin, y);
+          floatBallWrapper.classList.add('attached-left');
+        }
+        // 检查右边缘
+        else if (x >= width - ballSize - attachmentThreshold) {
+          isAttached = true;
+          attachDirection = 'right';
+          win.setPosition(width - ballSize - hoverMargin, y);
+          floatBallWrapper.classList.add('attached-right');
+        }
+        // 检查上边缘
+        else if (y <= attachmentThreshold) {
+          isAttached = true;
+          attachDirection = 'top';
+          win.setPosition(x, hoverMargin);
+          floatBallWrapper.classList.add('attached-top');
+        }
+        // 检查下边缘
+        else if (y >= height - ballSize - attachmentThreshold) {
+          isAttached = true;
+          attachDirection = 'bottom';
+          win.setPosition(x, height - ballSize - hoverMargin);
+          floatBallWrapper.classList.add('attached-bottom');
+        }
+      } catch (error) {
+        console.error('Error checking edge attachment:', error);
+      }
+    }
+    
+    function resetAttachment() {
+      isAttached = false;
+      attachDirection = null;
+      floatBallWrapper.classList.remove('attached-left', 'attached-right', 'attached-top', 'attached-bottom');
+    }
+    
+    // 点击事件处理 - 移除了直接绑定到floatBallWrapper，现在只在确认不是拖拽的情况下调用
+    function handleClick(e) {
+      console.log('Float ball clicked');
+      // 隐藏悬浮球，显示主窗口
+      ipcRenderer.send('toggle-main-window');
+    }
+    
+    // 初始化时检查吸附
+    window.addEventListener('load', () => {
+      setTimeout(checkEdgeAttachment, 500);
+    });
+  </script>
+</body>
+</html> 
