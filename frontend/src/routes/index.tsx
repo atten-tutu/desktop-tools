@@ -1,13 +1,12 @@
 // src/routes/index.tsx
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router'; // 引入 Link 组件
 import { useTranslation } from '../i18n/i18n';
-import { Space, Button } from '@arco-design/web-react';
-import { ipcRenderer } from 'electron';
 import { useState } from 'react';
 import Search from '../plugins/search/search';
-import HomePageLinks from '@/homepagelinks';
+import HomePageLinks from '@/HomePageLinks';
 import { IconSettings, IconList } from '@arco-design/web-react/icon';
+import { useSkin } from '@/plugins/skin/context';
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -15,8 +14,8 @@ export const Route = createFileRoute('/')({
 
 export default function App() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [showLinks, setShowLinks] = useState(false); // 初始状态设置为 false
+  const { primaryColor } = useSkin();
 
   const toggleLinks = () => {
     setShowLinks(!showLinks);
@@ -30,10 +29,10 @@ export default function App() {
         </div>
         <div className="icon-container">
           <div className="settings-icon" onClick={toggleLinks}>
-            <IconList style={{ fontSize: 24, color: '#646cff' }} />
+            <IconList style={{ fontSize: 24, color: primaryColor }} />
           </div>
           <Link to="/settings" className="settings-icon">
-            <IconSettings style={{ fontSize: 24, color: '#646cff' }} />
+            <IconSettings style={{ fontSize: 24, color: primaryColor }} />
           </Link>
         </div>
       </div>
