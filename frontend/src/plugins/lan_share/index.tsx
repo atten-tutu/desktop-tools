@@ -4,7 +4,6 @@ import { Tabs, Button, Badge, Layout, Modal } from '@arco-design/web-react';
 import { IconHome, IconPoweroff, IconSettings } from '@arco-design/web-react/icon';
 import { useTranslation } from '../../i18n/i18n';
 import ChatInterface from './components/chat_interface';
-import DeviceSelector from './components/device_selector';
 import Settings from './components/settings';
 import { useLanShare } from './context/LanShareContext';
 import './styles/index.css';

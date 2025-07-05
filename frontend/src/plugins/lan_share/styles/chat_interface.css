@@ -28,8 +28,9 @@
   background-color: var(--color-bg-2);
   border-radius: 4px;
   position: relative;
-  min-height: 200px; /* 确保有最小高度 */
-  max-height: calc(100% - 100px); /* 减去输入框高度 */
+  height: 100%;
+  max-height: calc(100vh - 120px);
+  min-height: 300px;
 }
 
 .empty-message {
@@ -157,26 +158,16 @@
   position: relative;
 }
 
-.message-input {
-  flex: 1;
-}
-
-.drag-hint {
+.paste-hint {
   position: absolute;
-  top: 50%;
+  bottom: 10px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  padding: 20px;
-  border-radius: 8px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.chat-container.dragging .drag-hint {
-  opacity: 1;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 /* 状态颜色 */
@@ -192,105 +183,9 @@
   color: var(--color-warning);
 }
 
-/* 上传区域样式 */
-.upload-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 8px;
-}
-
-.file-preview-area {
-  margin-bottom: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 0;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.file-preview-item {
-  position: relative;
-  padding: 4px 8px;
-  background-color: var(--color-fill-2);
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  max-width: 200px;
+  margin-top: 8px;
 }
-
-.file-preview-name {
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 4px;
-  max-width: 120px;
-}
-
-.file-preview-remove {
-  cursor: pointer;
-  color: var(--color-text-3);
-  margin: 0 4px;
-}
-
-.file-preview-remove:hover {
-  color: var(--color-danger);
-}
-
-/* 上传和发送按钮容器 */
-.upload-send-container {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-/* 自定义上传组件样式 */
-.custom-upload {
-  flex: 1;
-}
-
-.custom-upload .arco-upload-trigger {
-  width: 100% !important;
-  height: 40px !important;
-  border: 1px dashed var(--color-primary-light-3) !important;
-  border-radius: 4px !important;
-  padding: 0 !important;
-}
-
-.custom-upload .arco-upload-trigger:hover {
-  border-color: var(--color-primary) !important;
-  border-width: 1px !important;
-}
-
-.custom-upload .arco-upload-trigger-drag {
-  width: 100% !important;
-  height: 40px !important;
-}
-
-.custom-upload .arco-upload-trigger-drag:hover {
-  background-color: var(--color-primary-light-1) !important;
-}
-
-.upload-drag-content {
-  font-size: 13px !important;
-  line-height: 40px !important;
-  height: 40px !important;
-  text-align: center;
-  color: var(--color-text-3);
-}
-
-/* 发送按钮样式 */
-.send-button {
-  height: 40px !important;
-  padding: 0 16px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 90px;
-  margin-left: auto;
-} 

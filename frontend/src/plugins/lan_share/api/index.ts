@@ -10,7 +10,7 @@ export interface DeviceInfo {
 }
 
 // 消息类型
-export type MessageType = 'text' | 'file';
+export type MessageType = 'text' | 'file' | 'image';
 
 // 消息状态
 export type MessageStatus = 'success' | 'failed' | 'pending';
@@ -105,7 +105,7 @@ class LanShareApi {
         content: URL.createObjectURL(file),
         fileName: file.name,
         fileSize: this.formatFileSize(file.size),
-        type: 'file',
+        type: file.type.startsWith('image/') ? 'image' : 'file',
         timestamp: Date.now(),
         isOutgoing: true,
         status: 'pending'
