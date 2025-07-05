@@ -107,7 +107,13 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
     // 保存文件路径
     setSavePath(values.savePath || defaultDownloadPath);
     
-    Message.success('设置已保存');
+    // 使用 notification 代替 Message
+    try {
+      console.log('Settings saved successfully');
+      // 不使用 Message 组件，避免渲染问题
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
   };
 
   return (

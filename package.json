@@ -33,11 +33,13 @@
   "license": "ISC",
   "devDependencies": {
     "@electron/remote": "^2.1.2",
+    "@types/multer": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
     "electron": "^30.0.1",
     "eslint": "^9.28.0",
     "eslint-plugin-react": "^7.37.5",
+    "multer": "^1.4.5-lts.1",
     "turbo": "^2.5.4",
     "typescript": "^5.4.5"
   },

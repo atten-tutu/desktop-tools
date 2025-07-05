@@ -179,10 +179,29 @@ export const LanShareProvider: React.FC<{children: React.ReactNode}> = ({ childr
         await lanShareApi.stopService();
         setIsServiceRunning(false);
       } else {
-        await lanShareApi.startService();
-        setIsServiceRunning(true);
-        // 启动服务后扫描设备
-        await scanDevices();
+        // 在启动服务前设置必要的参数
+        console.log(`Setting port to ${port} and save path to ${savePath}`);
+        lanShareApi.setPort(port);
+        lanShareApi.setSavePath(savePath);
+        
+        // 启动服务
+        const startResult = await lanShareApi.startService();
+        console.log(`Service start result: ${startResult}`);
+        
+        // 明确转换为布尔值并更新状态
+        const success = Boolean(startResult);
+        setIsServiceRunning(success);
+        
+        // 测试服务器连接
+        if (success) {
+          setTimeout(async () => {
+            const testResult = await lanShareApi.testServerConnection();
+            console.log('Server connection test result:', testResult);
+          }, 1000);
+          
+          // 启动服务后扫描设备
+          await scanDevices();
+        }
       }
     } catch (error) {
       console.error('Failed to toggle service:', error);

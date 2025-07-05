@@ -29,10 +29,20 @@ export interface MessageData {
   deviceName?: string;
 }
 
+// 文件信息类型
+export interface FileInfo {
+  name: string;
+  path: string;
+  size: number;
+  lastModified: string;
+}
+
 // API 类
 class LanShareApi {
   private serviceRunning = false;
   private secretCode = '';
+  private port = 3000;
+  private savePath = '';
   
   // 获取本机名称
   getHostname(): Promise<string> {
@@ -45,8 +55,16 @@ class LanShareApi {
   }
   
   // 获取服务状态
-  getServiceStatus(): boolean {
-    return this.serviceRunning;
+  async getServiceStatus(): Promise<boolean> {
+    try {
+      const status = await ipcRenderer.invoke('lan-share-status');
+      this.serviceRunning = status;
+      console.log(`Current service status: ${status}`);
+      return status;
+    } catch (error) {
+      console.error('Failed to get service status:', error);
+      return false;
+    }
   }
   
   // 设置暗号
@@ -59,24 +77,47 @@ class LanShareApi {
     });
   }
   
+  // 设置端口
+  setPort(port: number): void {
+    console.log(`Setting port to: ${port}`);
+    this.port = port;
+  }
+  
+  // 设置保存路径
+  setSavePath(path: string): void {
+    console.log(`Setting save path to: ${path}`);
+    this.savePath = path;
+  }
+  
   // 启动服务
-  startService(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // TODO: 实际启动服务的逻辑
-      this.serviceRunning = true;
-      console.log('Service started');
-      resolve(true);
-    });
+  async startService(): Promise<boolean> {
+    try {
+      console.log(`Starting service with port: ${this.port}, savePath: ${this.savePath}`);
+      const result = await ipcRenderer.invoke('lan-share-start', {
+        port: this.port,
+        savePath: this.savePath
+      });
+      this.serviceRunning = result;
+      console.log(`Service started, result: ${result}, serviceRunning: ${this.serviceRunning}`);
+      return result;
+    } catch (error) {
+      console.error('Failed to start service:', error);
+      this.serviceRunning = false;
+      return false;
+    }
   }
   
   // 停止服务
-  stopService(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // TODO: 实际停止服务的逻辑
-      this.serviceRunning = false;
+  async stopService(): Promise<boolean> {
+    try {
+      const result = await ipcRenderer.invoke('lan-share-stop');
+      this.serviceRunning = !result;
       console.log('Service stopped');
-      resolve(true);
-    });
+      return result;
+    } catch (error) {
+      console.error('Failed to stop service:', error);
+      return false;
+    }
   }
   
   // 发送消息
@@ -104,13 +145,22 @@ class LanShareApi {
   }
   
   // 发送文件
-  sendFile(file: File, devices: DeviceInfo[]): Promise<MessageData> {
-    return new Promise((resolve, reject) => {
+  async sendFile(file: File, devices: DeviceInfo[]): Promise<MessageData> {
+    try {
+      // 检查服务是否运行
+      const isRunning = await this.getServiceStatus();
+      console.log(`Service running check before sending file: ${isRunning}`);
+      
+      if (!isRunning) {
+        console.error('Cannot send file: Service is not running');
+        throw new Error('Service is not running');
+      }
+
       if (!file) {
-        reject(new Error('No file provided'));
-        return;
+        throw new Error('No file provided');
       }
       
+      // 创建消息数据
       const msgData: MessageData = {
         id: Date.now().toString(),
         content: URL.createObjectURL(file),
@@ -122,16 +172,66 @@ class LanShareApi {
         status: 'pending'
       };
       
-      // TODO: 实际发送文件的逻辑
-      console.log(`Sending file: ${file.name} (${this.formatFileSize(file.size)})`);
-      console.log(`To devices: ${devices.map(d => d.name).join(', ')}`);
+      // 创建表单数据
+      const formData = new FormData();
+      formData.append('file', file);
       
-      // 模拟网络延迟和传输
-      setTimeout(() => {
-        msgData.status = 'success';
-        resolve(msgData);
-      }, 2000);
-    });
+      // 获取本机 IP
+      const ip = await this.getIp();
+      
+      console.log(`Current port: ${this.port}, Service running: ${this.serviceRunning}`);
+      console.log(`Uploading file to http://${ip}:${this.port}/upload`);
+      
+      // 先测试连接
+      const testResult = await this.testServerConnection();
+      console.log('Server connection test before upload:', testResult);
+      
+      if (!testResult.success) {
+        throw new Error('Cannot connect to server');
+      }
+      
+      // 也尝试使用 localhost
+      let response;
+      try {
+        // 上传文件到服务器
+        console.log(`Uploading file: ${file.name} (${this.formatFileSize(file.size)})`);
+        response = await fetch(`http://${ip}:${this.port}/upload`, {
+          method: 'POST',
+          body: formData
+        });
+      } catch (error) {
+        console.log('Trying with localhost instead');
+        response = await fetch(`http://localhost:${this.port}/upload`, {
+          method: 'POST',
+          body: formData
+        });
+      }
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Upload result:', result);
+      
+      // 更新消息数据
+      msgData.status = 'success';
+      msgData.content = result.file.url; // 使用服务器返回的 URL
+      
+      return msgData;
+    } catch (error) {
+      console.error('Failed to send file:', error);
+      return {
+        id: Date.now().toString(),
+        content: '',
+        fileName: file ? file.name : 'unknown',
+        fileSize: file ? this.formatFileSize(file.size) : '0 B',
+        type: 'file',
+        timestamp: Date.now(),
+        isOutgoing: true,
+        status: 'failed'
+      };
+    }
   }
   
   // 扫描局域网设备
@@ -161,12 +261,73 @@ class LanShareApi {
     });
   }
   
+  // 获取已上传文件列表
+  async getFileList(): Promise<FileInfo[]> {
+    try {
+      if (!this.savePath) {
+        console.error('Save path not set');
+        return [];
+      }
+      
+      const result = await ipcRenderer.invoke('lan-share-files', this.savePath);
+      if (result.success) {
+        return result.files;
+      } else {
+        console.error('Failed to get file list:', result.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error getting file list:', error);
+      return [];
+    }
+  }
+  
   // 格式化文件大小
   private formatFileSize(bytes: number): string {
     if (bytes < 1024) return bytes + ' B';
     else if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
     else if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
     else return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+  }
+
+  // 测试服务器连接
+  async testServerConnection(): Promise<{ success: boolean, data?: any, error?: string }> {
+    try {
+      // 获取本机 IP
+      const ip = await this.getIp();
+      
+      // 尝试使用 IP 地址
+      try {
+        console.log(`Testing connection to http://${ip}:${this.port}/test`);
+        const response = await fetch(`http://${ip}:${this.port}/test`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Test successful with IP:', data);
+          return { success: true, data };
+        }
+      } catch (ipError) {
+        console.log('IP connection failed, trying localhost');
+      }
+      
+      // 尝试使用 localhost
+      try {
+        console.log(`Testing connection to http://localhost:${this.port}/test`);
+        const response = await fetch(`http://localhost:${this.port}/test`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Test successful with localhost:', data);
+          return { success: true, data };
+        }
+      } catch (localhostError) {
+        console.log('Localhost connection failed');
+        throw new Error('Both IP and localhost connections failed');
+      }
+      
+      return { success: false, error: 'Failed to connect to server' };
+    } catch (error) {
+      console.error('Test server connection failed:', error);
+      return { success: false, error: String(error) };
+    }
   }
 }
 
