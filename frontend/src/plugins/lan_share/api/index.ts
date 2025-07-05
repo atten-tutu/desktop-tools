@@ -1,6 +1,6 @@
 // LAN Share API 封装
 import { Message } from '@arco-design/web-react';
-import { ipcRenderer } from 'electron';
+import { lanShareIpc } from './ipc-interface';
 
 // 设备信息类型
 export interface DeviceInfo {
@@ -45,19 +45,19 @@ class LanShareApi {
   private savePath = '';
   
   // 获取本机名称
-  getHostname(): Promise<string> {
-    return ipcRenderer.invoke('get-hostname');
+  async getHostname(): Promise<string> {
+    return await lanShareIpc.getHostname();
   }
   
   // 获取本机 IP 地址
-  getIp(): Promise<string> {
-    return ipcRenderer.invoke('get-ip');
+  async getIp(): Promise<string> {
+    return await lanShareIpc.getIp();
   }
   
   // 获取服务状态
   async getServiceStatus(): Promise<boolean> {
     try {
-      const status = await ipcRenderer.invoke('lan-share-status');
+      const status = await lanShareIpc.getServiceStatus();
       this.serviceRunning = status;
       console.log(`Current service status: ${status}`);
       return status;
@@ -93,7 +93,7 @@ class LanShareApi {
   async startService(): Promise<boolean> {
     try {
       console.log(`Starting service with port: ${this.port}, savePath: ${this.savePath}`);
-      const result = await ipcRenderer.invoke('lan-share-start', {
+      const result = await lanShareIpc.startService({
         port: this.port,
         savePath: this.savePath
       });
@@ -110,7 +110,7 @@ class LanShareApi {
   // 停止服务
   async stopService(): Promise<boolean> {
     try {
-      const result = await ipcRenderer.invoke('lan-share-stop');
+      const result = await lanShareIpc.stopService();
       this.serviceRunning = !result;
       console.log('Service stopped');
       return result;
@@ -269,7 +269,7 @@ class LanShareApi {
         return [];
       }
       
-      const result = await ipcRenderer.invoke('lan-share-files', this.savePath);
+      const result = await lanShareIpc.getFileList(this.savePath);
       if (result.success) {
         return result.files;
       } else {

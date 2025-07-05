@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Form, Input, InputNumber, Button, Message } from '@arco-design/web-react';
 import { IconFolder } from '@arco-design/web-react/icon';
 import { useLanShare } from '../context/LanShareContext';
-import { ipcRenderer } from 'electron';
+import { lanShareIpc } from '../api/ipc-interface';
 import '../styles/settings.css';
 
 const FormItem = Form.Item;
@@ -31,7 +31,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
   useEffect(() => {
     const getDefaultDownloadPath = async () => {
       try {
-        const path = await ipcRenderer.invoke('get-downloads-path');
+        const path = await lanShareIpc.getDownloadsPath();
         setDefaultDownloadPath(path);
         // 如果没有设置保存路径，使用默认下载路径
         if (!savePath) {
@@ -61,9 +61,8 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
   // 选择文件保存路径
   const handleSelectPath = async () => {
     try {
-      const result = await ipcRenderer.invoke('select-directory');
-      if (result && !result.canceled && result.filePaths.length > 0) {
-        const selectedPath = result.filePaths[0];
+      const selectedPath = await lanShareIpc.selectDirectory();
+      if (selectedPath) {
         setSavePath(selectedPath);
         form.setFieldValue('savePath', selectedPath);
       }
@@ -78,7 +77,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
     switch (field) {
       case 'hostname':
         // 清除主机名时，重新获取系统主机名
-        ipcRenderer.invoke('get-hostname').then((systemHostname) => {
+        lanShareIpc.getHostname().then((systemHostname) => {
           setHostname(systemHostname);
           form.setFieldValue('hostname', systemHostname);
         });

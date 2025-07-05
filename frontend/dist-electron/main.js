@@ -1,13 +1,13 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import require$$3$1, { app, BrowserWindow, globalShortcut, ipcMain, dialog, screen } from "electron";
+import require$$3$1, { ipcMain, app, BrowserWindow, globalShortcut, dialog, screen } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path$5 from "node:path";
 import fs$5 from "fs";
 import require$$0$3 from "events";
-import require$$1$2, { hostname, networkInterfaces } from "os";
+import require$$1$2, { networkInterfaces, hostname } from "os";
 import require$$0$4 from "path";
 import require$$0$6 from "tty";
 import require$$0$5 from "util";
@@ -24601,7 +24601,7 @@ var objectInspect = function inspect_(obj, options, depth, seen) {
     var ys = arrObjKeys(obj, inspect2);
     var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
     var protoTag = obj instanceof Object ? "" : "null prototype";
-    var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr(obj), 8, -1) : protoTag ? "Object" : "";
+    var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr$1(obj), 8, -1) : protoTag ? "Object" : "";
     var constructorTag = isPlainObject || typeof obj.constructor !== "function" ? "" : obj.constructor.name ? obj.constructor.name + " " : "";
     var tag = constructorTag + (stringTag || protoTag ? "[" + $join.call($concat$1.call([], stringTag || [], protoTag || []), ": ") + "] " : "");
     if (ys.length === 0) {
@@ -24626,25 +24626,25 @@ function canTrustToString(obj) {
   return !toStringTag || !(typeof obj === "object" && (toStringTag in obj || typeof obj[toStringTag] !== "undefined"));
 }
 function isArray$3(obj) {
-  return toStr(obj) === "[object Array]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object Array]" && canTrustToString(obj);
 }
 function isDate$1(obj) {
-  return toStr(obj) === "[object Date]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object Date]" && canTrustToString(obj);
 }
 function isRegExp$1(obj) {
-  return toStr(obj) === "[object RegExp]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object RegExp]" && canTrustToString(obj);
 }
 function isError(obj) {
-  return toStr(obj) === "[object Error]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object Error]" && canTrustToString(obj);
 }
 function isString(obj) {
-  return toStr(obj) === "[object String]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object String]" && canTrustToString(obj);
 }
 function isNumber(obj) {
-  return toStr(obj) === "[object Number]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object Number]" && canTrustToString(obj);
 }
 function isBoolean(obj) {
-  return toStr(obj) === "[object Boolean]" && canTrustToString(obj);
+  return toStr$1(obj) === "[object Boolean]" && canTrustToString(obj);
 }
 function isSymbol(obj) {
   if (hasShammedSymbols) {
@@ -24680,7 +24680,7 @@ var hasOwn$1 = Object.prototype.hasOwnProperty || function(key) {
 function has$3(obj, key) {
   return hasOwn$1.call(obj, key);
 }
-function toStr(obj) {
+function toStr$1(obj) {
   return objectToString.call(obj);
 }
 function nameOf(f) {
@@ -24989,7 +24989,7 @@ var syntax = SyntaxError;
 var uri = URIError;
 var abs$1 = Math.abs;
 var floor$1 = Math.floor;
-var max$1 = Math.max;
+var max$2 = Math.max;
 var min$1 = Math.min;
 var pow$1 = Math.pow;
 var round$1 = Math.round;
@@ -25118,99 +25118,78 @@ function requireObject_getPrototypeOf() {
   Object_getPrototypeOf = $Object2.getPrototypeOf || null;
   return Object_getPrototypeOf;
 }
-var implementation;
-var hasRequiredImplementation;
-function requireImplementation() {
-  if (hasRequiredImplementation) return implementation;
-  hasRequiredImplementation = 1;
-  var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
-  var toStr2 = Object.prototype.toString;
-  var max2 = Math.max;
-  var funcType = "[object Function]";
-  var concatty = function concatty2(a, b) {
-    var arr = [];
-    for (var i = 0; i < a.length; i += 1) {
-      arr[i] = a[i];
+var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
+var toStr = Object.prototype.toString;
+var max$1 = Math.max;
+var funcType = "[object Function]";
+var concatty = function concatty2(a, b) {
+  var arr = [];
+  for (var i = 0; i < a.length; i += 1) {
+    arr[i] = a[i];
+  }
+  for (var j = 0; j < b.length; j += 1) {
+    arr[j + a.length] = b[j];
+  }
+  return arr;
+};
+var slicy = function slicy2(arrLike, offset) {
+  var arr = [];
+  for (var i = offset, j = 0; i < arrLike.length; i += 1, j += 1) {
+    arr[j] = arrLike[i];
+  }
+  return arr;
+};
+var joiny = function(arr, joiner) {
+  var str = "";
+  for (var i = 0; i < arr.length; i += 1) {
+    str += arr[i];
+    if (i + 1 < arr.length) {
+      str += joiner;
     }
-    for (var j = 0; j < b.length; j += 1) {
-      arr[j + a.length] = b[j];
-    }
-    return arr;
-  };
-  var slicy = function slicy2(arrLike, offset) {
-    var arr = [];
-    for (var i = offset, j = 0; i < arrLike.length; i += 1, j += 1) {
-      arr[j] = arrLike[i];
-    }
-    return arr;
-  };
-  var joiny = function(arr, joiner) {
-    var str = "";
-    for (var i = 0; i < arr.length; i += 1) {
-      str += arr[i];
-      if (i + 1 < arr.length) {
-        str += joiner;
-      }
-    }
-    return str;
-  };
-  implementation = function bind2(that) {
-    var target = this;
-    if (typeof target !== "function" || toStr2.apply(target) !== funcType) {
-      throw new TypeError(ERROR_MESSAGE + target);
-    }
-    var args = slicy(arguments, 1);
-    var bound;
-    var binder = function() {
-      if (this instanceof bound) {
-        var result = target.apply(
-          this,
-          concatty(args, arguments)
-        );
-        if (Object(result) === result) {
-          return result;
-        }
-        return this;
-      }
-      return target.apply(
-        that,
+  }
+  return str;
+};
+var implementation$1 = function bind(that) {
+  var target = this;
+  if (typeof target !== "function" || toStr.apply(target) !== funcType) {
+    throw new TypeError(ERROR_MESSAGE + target);
+  }
+  var args = slicy(arguments, 1);
+  var bound;
+  var binder = function() {
+    if (this instanceof bound) {
+      var result = target.apply(
+        this,
         concatty(args, arguments)
       );
-    };
-    var boundLength = max2(0, target.length - args.length);
-    var boundArgs = [];
-    for (var i = 0; i < boundLength; i++) {
-      boundArgs[i] = "$" + i;
+      if (Object(result) === result) {
+        return result;
+      }
+      return this;
     }
-    bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
-    if (target.prototype) {
-      var Empty = function Empty2() {
-      };
-      Empty.prototype = target.prototype;
-      bound.prototype = new Empty();
-      Empty.prototype = null;
-    }
-    return bound;
+    return target.apply(
+      that,
+      concatty(args, arguments)
+    );
   };
-  return implementation;
-}
-var functionBind;
-var hasRequiredFunctionBind;
-function requireFunctionBind() {
-  if (hasRequiredFunctionBind) return functionBind;
-  hasRequiredFunctionBind = 1;
-  var implementation2 = requireImplementation();
-  functionBind = Function.prototype.bind || implementation2;
-  return functionBind;
-}
-var functionCall;
-var hasRequiredFunctionCall;
-function requireFunctionCall() {
-  if (hasRequiredFunctionCall) return functionCall;
-  hasRequiredFunctionCall = 1;
-  functionCall = Function.prototype.call;
-  return functionCall;
-}
+  var boundLength = max$1(0, target.length - args.length);
+  var boundArgs = [];
+  for (var i = 0; i < boundLength; i++) {
+    boundArgs[i] = "$" + i;
+  }
+  bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
+  if (target.prototype) {
+    var Empty = function Empty2() {
+    };
+    Empty.prototype = target.prototype;
+    bound.prototype = new Empty();
+    Empty.prototype = null;
+  }
+  return bound;
+};
+var implementation = implementation$1;
+var functionBind = Function.prototype.bind || implementation;
+var functionCall = Function.prototype.call;
 var functionApply;
 var hasRequiredFunctionApply;
 function requireFunctionApply() {
@@ -25220,14 +25199,14 @@ function requireFunctionApply() {
   return functionApply;
 }
 var reflectApply = typeof Reflect !== "undefined" && Reflect && Reflect.apply;
-var bind$2 = requireFunctionBind();
+var bind$2 = functionBind;
 var $apply$1 = requireFunctionApply();
-var $call$2 = requireFunctionCall();
+var $call$2 = functionCall;
 var $reflectApply = reflectApply;
 var actualApply = $reflectApply || bind$2.call($call$2, $apply$1);
-var bind$1 = requireFunctionBind();
+var bind$1 = functionBind;
 var $TypeError$4 = type;
-var $call$1 = requireFunctionCall();
+var $call$1 = functionCall;
 var $actualApply = actualApply;
 var callBindApplyHelpers = function callBindBasic(args) {
   if (args.length < 1 || typeof args[0] !== "function") {
@@ -25293,8 +25272,8 @@ function requireHasown() {
   hasRequiredHasown = 1;
   var call = Function.prototype.call;
   var $hasOwn = Object.prototype.hasOwnProperty;
-  var bind2 = requireFunctionBind();
-  hasown = bind2.call(call, $hasOwn);
+  var bind3 = functionBind;
+  hasown = bind3.call(call, $hasOwn);
   return hasown;
 }
 var undefined$1;
@@ -25308,7 +25287,7 @@ var $TypeError$3 = type;
 var $URIError = uri;
 var abs = abs$1;
 var floor = floor$1;
-var max = max$1;
+var max = max$2;
 var min = min$1;
 var pow = pow$1;
 var round = round$1;
@@ -25342,7 +25321,7 @@ var getProto = requireGetProto();
 var $ObjectGPO = requireObject_getPrototypeOf();
 var $ReflectGPO = requireReflect_getPrototypeOf();
 var $apply = requireFunctionApply();
-var $call = requireFunctionCall();
+var $call = functionCall;
 var needsEval = {};
 var TypedArray = typeof Uint8Array === "undefined" || !getProto ? undefined$1 : getProto(Uint8Array);
 var INTRINSICS = {
@@ -25513,13 +25492,13 @@ var LEGACY_ALIASES = {
   "%WeakMapPrototype%": ["WeakMap", "prototype"],
   "%WeakSetPrototype%": ["WeakSet", "prototype"]
 };
-var bind = requireFunctionBind();
+var bind2 = functionBind;
 var hasOwn = requireHasown();
-var $concat = bind.call($call, Array.prototype.concat);
-var $spliceApply = bind.call($apply, Array.prototype.splice);
-var $replace = bind.call($call, String.prototype.replace);
-var $strSlice = bind.call($call, String.prototype.slice);
-var $exec = bind.call($call, RegExp.prototype.exec);
+var $concat = bind2.call($call, Array.prototype.concat);
+var $spliceApply = bind2.call($apply, Array.prototype.splice);
+var $replace = bind2.call($call, String.prototype.replace);
+var $strSlice = bind2.call($call, String.prototype.slice);
+var $exec = bind2.call($call, RegExp.prototype.exec);
 var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
 var reEscapeChar = /\\(\\)?/g;
 var stringToPath = function stringToPath2(string) {
@@ -42079,7 +42058,8 @@ class LanShareServer {
     });
     this.app.post("/upload", upload.single("file"), (req2, res2) => {
       if (!req2.file) {
-        return res2.status(400).json({ error: "No file uploaded" });
+        res2.status(400).json({ error: "No file uploaded" });
+        return;
       }
       res2.status(200).json({
         success: true,
@@ -42196,10 +42176,83 @@ class LanShareServer {
   isServiceRunning() {
     return this.isRunning;
   }
+  /**
+   * 获取服务器 URL
+   * @returns 服务器 URL
+   */
+  getServerUrl() {
+    if (!this.isRunning) {
+      return "";
+    }
+    return `http://${this.getLocalIpAddress()}:${this.port}`;
+  }
+  /**
+   * 获取已上传文件列表
+   * @param dirPath 目录路径
+   * @returns 文件列表信息
+   */
+  getFileList(dirPath) {
+    try {
+      if (!fs$5.existsSync(dirPath)) {
+        return { success: false, error: "Directory does not exist", files: [] };
+      }
+      const files = fs$5.readdirSync(dirPath).filter((file) => {
+        const filePath = require$$0$4.join(dirPath, file);
+        return fs$5.statSync(filePath).isFile();
+      }).map((file) => {
+        const filePath = require$$0$4.join(dirPath, file);
+        const stats = fs$5.statSync(filePath);
+        return {
+          name: file,
+          path: filePath,
+          size: stats.size,
+          lastModified: stats.mtime.toISOString()
+        };
+      });
+      return { success: true, files };
+    } catch (error2) {
+      console.error("Error getting file list:", error2);
+      return { success: false, error: String(error2), files: [] };
+    }
+  }
+}
+function setupLanShareIPC(lanShareServer2) {
+  ipcMain.handle("lan-share-start", async (event, options) => {
+    console.log(`Starting LAN Share server on port ${options.port} with save path ${options.savePath}`);
+    lanShareServer2.setPort(options.port);
+    lanShareServer2.setSavePath(options.savePath);
+    const result = await lanShareServer2.start();
+    console.log(`LAN Share server start result: ${result}, isRunning: ${lanShareServer2.isServiceRunning()}`);
+    return result;
+  });
+  ipcMain.handle("lan-share-stop", async () => {
+    console.log("Stopping LAN Share server");
+    const result = await lanShareServer2.stop();
+    console.log(`LAN Share server stop result: ${result}, isRunning: ${lanShareServer2.isServiceRunning()}`);
+    return result;
+  });
+  ipcMain.handle("lan-share-status", () => {
+    const status3 = lanShareServer2.isServiceRunning();
+    console.log(`LAN Share server status: ${status3}`);
+    return status3;
+  });
+  ipcMain.handle("lan-share-files", async (event, dirPath) => {
+    return lanShareServer2.getFileList(dirPath);
+  });
+  ipcMain.handle("lan-share-url", () => {
+    return lanShareServer2.getServerUrl();
+  });
+}
+function cleanupLanShareIPC() {
+  ipcMain.removeHandler("lan-share-start");
+  ipcMain.removeHandler("lan-share-stop");
+  ipcMain.removeHandler("lan-share-status");
+  ipcMain.removeHandler("lan-share-files");
+  ipcMain.removeHandler("lan-share-url");
 }
 const lanShareServer = new LanShareServer();
 main.initialize();
-createRequire(import.meta.url);
+const require$1 = createRequire(import.meta.url);
 const __dirname = path$5.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path$5.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -42278,6 +42331,7 @@ app.whenReady().then(() => {
   }
   createMainWindow();
   createFloatBallWindow();
+  setupLanShareIPC(lanShareServer);
   globalShortcut.register("CommandOrControl+Shift+P", () => {
     if (!mainWindow) return;
     if (mainWindow.isVisible()) {
@@ -42318,6 +42372,10 @@ app.whenReady().then(() => {
 });
 app.on("will-quit", () => {
   globalShortcut.unregisterAll();
+  cleanupLanShareIPC();
+  lanShareServer.stop().catch((err) => {
+    console.error("Error stopping LAN Share server:", err);
+  });
 });
 function openPluginWindow(pluginName) {
   const pluginHtml = path$5.join(process.env.APP_ROOT, "plugins", pluginName, "index.html");
@@ -42388,7 +42446,7 @@ ipcMain.handle("get-hostname", async () => {
   return hostname();
 });
 ipcMain.handle("get-ip", async () => {
-  const nets = networkInterfaces();
+  const nets = require$1("os").networkInterfaces();
   const results = [];
   for (const name of Object.keys(nets)) {
     const net = nets[name];
@@ -42409,49 +42467,6 @@ ipcMain.handle("select-directory", async () => {
 });
 ipcMain.handle("get-downloads-path", async () => {
   return app.getPath("downloads");
-});
-ipcMain.handle("lan-share-start", async (event, options) => {
-  console.log(`Starting LAN Share server on port ${options.port} with save path ${options.savePath}`);
-  lanShareServer.setPort(options.port);
-  lanShareServer.setSavePath(options.savePath);
-  const result = await lanShareServer.start();
-  console.log(`LAN Share server start result: ${result}, isRunning: ${lanShareServer.isServiceRunning()}`);
-  return result;
-});
-ipcMain.handle("lan-share-stop", async () => {
-  console.log("Stopping LAN Share server");
-  const result = await lanShareServer.stop();
-  console.log(`LAN Share server stop result: ${result}, isRunning: ${lanShareServer.isServiceRunning()}`);
-  return result;
-});
-ipcMain.handle("lan-share-status", () => {
-  const status3 = lanShareServer.isServiceRunning();
-  console.log(`LAN Share server status: ${status3}`);
-  return status3;
-});
-ipcMain.handle("lan-share-files", async (event, dirPath) => {
-  try {
-    if (!fs$5.existsSync(dirPath)) {
-      return { success: false, error: "Directory does not exist", files: [] };
-    }
-    const files = fs$5.readdirSync(dirPath).filter((file) => {
-      const filePath = path$5.join(dirPath, file);
-      return fs$5.statSync(filePath).isFile();
-    }).map((file) => {
-      const filePath = path$5.join(dirPath, file);
-      const stats = fs$5.statSync(filePath);
-      return {
-        name: file,
-        path: filePath,
-        size: stats.size,
-        lastModified: stats.mtime.toISOString()
-      };
-    });
-    return { success: true, files };
-  } catch (error2) {
-    console.error("Error getting file list:", error2);
-    return { success: false, error: String(error2), files: [] };
-  }
 });
 export {
   MAIN_DIST,
