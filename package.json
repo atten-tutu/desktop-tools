@@ -32,6 +32,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@electron/remote": "^2.1.2",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
     "electron": "^30.0.1",
