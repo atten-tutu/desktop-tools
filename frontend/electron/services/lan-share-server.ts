@@ -17,6 +17,7 @@ export class LanShareServer {
   private port: number = 3000;
   private savePath: string = '';
   private isRunning: boolean = false;
+  private deviceName: string = ''; // 设备名称
 
   constructor() {
     this.app = express();
@@ -132,6 +133,14 @@ export class LanShareServer {
   }
 
   /**
+   * 设置设备名称
+   * @param name 设备名称
+   */
+  public setDeviceName(name: string): void {
+    this.deviceName = name;
+  }
+
+  /**
    * 设置文件保存路径
    * @param savePath 保存路径
    */
@@ -199,26 +208,17 @@ export class LanShareServer {
   public async stop(): Promise<boolean> {
     if (!this.isRunning || !this.server) {
       console.log('Server is not running');
-      this.isRunning = false;
       return true;
     }
     
-    try {
-      return new Promise((resolve) => {
-        this.server?.close(() => {
-          console.log('LAN Share server stopped');
-          this.isRunning = false;
-          this.server = null;
-          resolve(true);
-        });
+    return new Promise((resolve) => {
+      this.server?.close(() => {
+        console.log('LAN Share server stopped');
+        this.isRunning = false;
+        this.server = null;
+        resolve(true);
       });
-    } catch (error) {
-      console.error('Failed to stop LAN Share server:', error);
-      // 即使出错，也将状态设置为已停止
-      this.isRunning = false;
-      this.server = null;
-      return false;
-    }
+    });
   }
 
   /**
@@ -237,7 +237,9 @@ export class LanShareServer {
     if (!this.isRunning) {
       return '';
     }
-    return `http://${this.getLocalIpAddress()}:${this.port}`;
+    
+    const ip = this.getLocalIpAddress();
+    return `http://${ip}:${this.port}`;
   }
 
   /**
@@ -252,10 +254,7 @@ export class LanShareServer {
       }
       
       const files = fs.readdirSync(dirPath)
-        .filter(file => {
-          const filePath = path.join(dirPath, file);
-          return fs.statSync(filePath).isFile();
-        })
+        .filter(file => fs.statSync(path.join(dirPath, file)).isFile())
         .map(file => {
           const filePath = path.join(dirPath, file);
           const stats = fs.statSync(filePath);
@@ -266,10 +265,10 @@ export class LanShareServer {
             lastModified: stats.mtime.toISOString()
           };
         });
-        
+      
       return { success: true, files };
     } catch (error) {
-      console.error('Error getting file list:', error);
+      console.error('Failed to get file list:', error);
       return { success: false, error: String(error), files: [] };
     }
   }

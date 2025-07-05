@@ -57,7 +57,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
 
   // 将内部ref暴露给外部
   React.useImperativeHandle(formRef, () => internalRef.current);
-
+  
   // 选择文件保存路径
   const handleSelectPath = async () => {
     try {
@@ -71,7 +71,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
       Message.error('文件夹选择失败');
     }
   };
-
+  
   // 处理输入框清除
   const handleClear = (field: keyof FormValues) => {
     switch (field) {
@@ -114,10 +114,10 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
       console.error('Error saving settings:', error);
     }
   };
-
+  
   return (
     <div className="settings-container">
-      <Form 
+      <Form
         form={form}
         initialValues={{
           hostname: hostname,
@@ -129,20 +129,20 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
         wrapperCol={{ span: 18 }}
         className="settings-form"
       >
-        <FormItem 
+        <FormItem
           label="本机名称" 
           field="hostname"
           tooltip="设置自定义名称（对其他设备可见）"
           rules={[{ required: true, message: '请输入本机名称' }]}
         >
-          <Input 
+          <Input
             placeholder="请输入本机名称" 
             allowClear 
             onClear={() => handleClear('hostname')}
           />
         </FormItem>
         
-        <FormItem 
+        <FormItem
           label="端口号" 
           field="port"
           tooltip="局域网共享服务的端口号（1024-65535）"
@@ -165,8 +165,8 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
           />
         </FormItem>
         
-        <FormItem 
-          label="保存路径" 
+        <FormItem
+          label="保存路径"
           field="savePath"
           tooltip="接收的文件将被保存在此目录"
           rules={[{ required: true, message: '请选择文件保存路径' }]}

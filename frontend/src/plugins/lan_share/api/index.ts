@@ -1,6 +1,7 @@
 // LAN Share API 封装
 import { Message } from '@arco-design/web-react';
 import { lanShareIpc } from './ipc-interface';
+import type { Message as LanShareMessage } from './ipc-interface';
 
 // 设备信息类型
 export interface DeviceInfo {
@@ -43,6 +44,7 @@ class LanShareApi {
   private secretCode = '';
   private port = 3000;
   private savePath = '';
+  private deviceName = '';
   
   // 获取本机名称
   async getHostname(): Promise<string> {
@@ -89,13 +91,27 @@ class LanShareApi {
     this.savePath = path;
   }
   
+  // 设置设备名称
+  setDeviceName(name: string): void {
+    console.log(`Setting device name to: ${name}`);
+    this.deviceName = name;
+    
+    // 如果服务已启动，更新设备名称
+    if (this.serviceRunning) {
+      lanShareIpc.setDeviceName(name).catch(error => {
+        console.error('Failed to set device name:', error);
+      });
+    }
+  }
+  
   // 启动服务
   async startService(): Promise<boolean> {
     try {
-      console.log(`Starting service with port: ${this.port}, savePath: ${this.savePath}`);
+      console.log(`Starting service with port: ${this.port}, savePath: ${this.savePath}, deviceName: ${this.deviceName}`);
       const result = await lanShareIpc.startService({
         port: this.port,
-        savePath: this.savePath
+        savePath: this.savePath,
+        deviceName: this.deviceName
       });
       this.serviceRunning = result;
       console.log(`Service started, result: ${result}, serviceRunning: ${this.serviceRunning}`);

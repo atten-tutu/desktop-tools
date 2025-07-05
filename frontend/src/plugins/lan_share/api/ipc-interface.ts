@@ -10,7 +10,7 @@ export class LanShareIpcInterface {
    * @param options 服务器配置选项
    * @returns 是否成功启动
    */
-  async startService(options: { port: number, savePath: string }): Promise<boolean> {
+  async startService(options: { port: number, savePath: string, deviceName: string }): Promise<boolean> {
     try {
       return await ipcRenderer.invoke('lan-share-start', options);
     } catch (error) {
@@ -125,6 +125,20 @@ export class LanShareIpcInterface {
     } catch (error) {
       console.error('Failed to get downloads path:', error);
       return '';
+    }
+  }
+
+  /**
+   * 设置设备名称
+   * @param name 设备名称
+   * @returns 设置结果
+   */
+  async setDeviceName(name: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      return await ipcRenderer.invoke('lan-share-set-device-name', name);
+    } catch (error) {
+      console.error('Failed to set device name:', error);
+      return { success: false, error: String(error) };
     }
   }
 }

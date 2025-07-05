@@ -197,6 +197,7 @@ export const LanShareProvider: React.FC<{children: React.ReactNode}> = ({ childr
         console.log(`Setting port to ${port} and save path to ${savePath}`);
         lanShareApi.setPort(port);
         lanShareApi.setSavePath(savePath);
+        lanShareApi.setDeviceName(hostname);
         
         // 启动服务
         const startResult = await lanShareApi.startService();
@@ -249,6 +250,11 @@ export const LanShareProvider: React.FC<{children: React.ReactNode}> = ({ childr
   const setHostname = (newHostname: string) => {
     setHostnameState(newHostname);
     localStorage.setItem(STORAGE_KEYS.CUSTOM_HOSTNAME, JSON.stringify(newHostname));
+    
+    // 如果服务已运行，更新设备名称
+    if (isServiceRunning) {
+      lanShareApi.setDeviceName(newHostname);
+    }
   };
   
   // 扫描设备

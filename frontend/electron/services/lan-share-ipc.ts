@@ -8,10 +8,16 @@ import path from 'path';
  */
 export function setupLanShareIPC(lanShareServer: LanShareServer): void {
   // 启动服务器
-  ipcMain.handle('lan-share-start', async (event, options: { port: number, savePath: string }) => {
+  ipcMain.handle('lan-share-start', async (event, options: { port: number, savePath: string, deviceName: string }) => {
     console.log(`Starting LAN Share server on port ${options.port} with save path ${options.savePath}`);
     lanShareServer.setPort(options.port);
     lanShareServer.setSavePath(options.savePath);
+    
+    // 设置设备名称
+    if (options.deviceName) {
+      lanShareServer.setDeviceName(options.deviceName);
+    }
+    
     const result = await lanShareServer.start();
     console.log(`LAN Share server start result: ${result}, isRunning: ${lanShareServer.isServiceRunning()}`);
     return result;
@@ -41,6 +47,17 @@ export function setupLanShareIPC(lanShareServer: LanShareServer): void {
   ipcMain.handle('lan-share-url', () => {
     return lanShareServer.getServerUrl();
   });
+  
+  // 设置设备名称
+  ipcMain.handle('lan-share-set-device-name', (event, name: string) => {
+    try {
+      lanShareServer.setDeviceName(name);
+      return { success: true };
+    } catch (error) {
+      console.error('Error setting device name:', error);
+      return { success: false, error: String(error) };
+    }
+  });
 }
 
 /**
@@ -52,4 +69,5 @@ export function cleanupLanShareIPC(): void {
   ipcMain.removeHandler('lan-share-status');
   ipcMain.removeHandler('lan-share-files');
   ipcMain.removeHandler('lan-share-url');
+  ipcMain.removeHandler('lan-share-set-device-name');
 } 
