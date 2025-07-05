@@ -1,4 +1,3 @@
-import { initClient } from "server/rpc";
 import ky from "ky";
 
 export const myFetch = ky.extend({
@@ -19,6 +18,19 @@ export const myFetch = ky.extend({
   throwHttpErrors: true,
 });
 
-export const apiClient = initClient(import.meta.env.BASE_URL, {
-  fetch: myFetch,
-});
+const API_BASE_URL = "http://47.110.158.139:3771";
+
+export const apiClient = {
+  get: async (url: string) => {
+    return myFetch.get(`${API_BASE_URL}${url}`).json();
+  },
+  post: async (url: string, data: any) => {
+    return myFetch.post(`${API_BASE_URL}${url}`, { json: data }).json();
+  },
+  put: async (url: string, data: any) => {
+    return myFetch.put(`${API_BASE_URL}${url}`, { json: data }).json();
+  },
+  delete: async (url: string) => {
+    return myFetch.delete(`${API_BASE_URL}${url}`).json();
+  },
+};

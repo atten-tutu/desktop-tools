@@ -33,10 +33,18 @@ const PluginProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
     },
     {
       id: 2,
-      name: '时间戳转换插件',
-      description: '方便进行时间戳和日期的相互转换',
+      name: '神秘礼物1',
+      description: '解压有神秘惊喜',
       version: '1.1.0',
-      changelog: '优化转换算法，增加更多时区支持',
+      changelog: '测试用',
+      installed: false,
+    },
+     {
+      id: 3,
+      name: '计算器Pro',
+      description: '计算',
+      version: '1.1.0',
+      changelog: 'init',
       installed: false,
     },
   ]);

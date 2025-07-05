@@ -1,8 +1,7 @@
-import path from 'node:path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import electron from 'vite-plugin-electron/simple'
-
+import path from 'node:path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import electron from 'vite-plugin-electron/simple';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -32,4 +31,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
-})
+  server: {
+    proxy: {
+      // 将所有以 /api 开头的请求转发到本地 3771 端口
+      '/api': {
+        target: 'http://47.110.158.139:3771',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
+});
