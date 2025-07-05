@@ -73,10 +73,8 @@ const LanShareContext = createContext<LanShareContextType | undefined>(undefined
 
 // 上下文提供者
 export const LanShareProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  // 从 localStorage 读取初始状态
-  const [isServiceRunning, setIsServiceRunning] = useState(
-    getStoredValue(STORAGE_KEYS.SERVICE_RUNNING, false)
-  );
+  // 初始状态设置为 false，稍后从服务器获取真实状态
+  const [isServiceRunning, setIsServiceRunning] = useState(false);
   const [selectedDevices, setSelectedDevices] = useState<DeviceInfo[]>([]);
   const [availableDevices, setAvailableDevices] = useState<DeviceInfo[]>([]);
   const [messages, setMessages] = useState<MessageData[]>([]);
@@ -119,14 +117,30 @@ export const LanShareProvider: React.FC<{children: React.ReactNode}> = ({ childr
     // 数据迁移 - 确保所有存储的值都是有效的 JSON 格式
     migrateLocalStorageData();
     
-    // 获取服务状态
-    const serviceStatus = lanShareApi.getServiceStatus();
-    setIsServiceRunning(serviceStatus);
+    // 获取服务状态 - 修复异步调用
+    const checkServiceStatus = async () => {
+      try {
+        console.log('Checking actual service status from server...');
+        const serviceStatus = await lanShareApi.getServiceStatus();
+        console.log(`Actual service status from server: ${serviceStatus}`);
+        
+        // 更新状态和 localStorage
+        setIsServiceRunning(serviceStatus);
+        localStorage.setItem(STORAGE_KEYS.SERVICE_RUNNING, JSON.stringify(serviceStatus));
+        
+        // 如果服务已启动，扫描设备
+        if (serviceStatus) {
+          scanDevices();
+        }
+      } catch (error) {
+        console.error('Failed to check service status:', error);
+        // 出错时设置为 false
+        setIsServiceRunning(false);
+        localStorage.setItem(STORAGE_KEYS.SERVICE_RUNNING, JSON.stringify(false));
+      }
+    };
     
-    // 如果服务已启动，扫描设备
-    if (serviceStatus) {
-      scanDevices();
-    }
+    checkServiceStatus();
 
     const fetchHostname = async () => {
       try {

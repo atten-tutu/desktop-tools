@@ -111,7 +111,8 @@ class LanShareApi {
   async stopService(): Promise<boolean> {
     try {
       const result = await lanShareIpc.stopService();
-      this.serviceRunning = !result;
+      // 修复逻辑错误：result 为 true 表示成功停止，此时 serviceRunning 应该为 false
+      this.serviceRunning = false;
       console.log('Service stopped');
       return result;
     } catch (error) {
