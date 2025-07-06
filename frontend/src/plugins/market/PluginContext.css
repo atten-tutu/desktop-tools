@@ -1,0 +1,16 @@
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.bg-primary {
+  background-color: #165DFF;
+}
+
+.text-primary {
+  color: #165DFF;
+}
