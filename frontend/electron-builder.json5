@@ -11,15 +11,41 @@
   mac: {
     target: ['dmg'],
     artifactName: '${productName}-Mac-${version}-Installer.${ext}',
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "com.desktop.tools",
+  "asar": true,
+  "productName": "Desktop Tools",
+  "icon": "app-icon.ico",
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    "dist",
+    "dist-electron",
+    "app-icon.ico"
+  ],
+  "mac": {
+    "target": [
+      "dmg"
+    ],
+    "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
+    "icon": "app-icon.ico"
+  files: ['dist', 'dist-electron'],
+  mac: {
+    target: ['dmg'],
+    artifactName: '${productName}-Mac-${version}-Installer.${ext}',
   },
   win: {
     target: [
       {
-        target: 'nsis',
-        arch: ['x64'],
-      },
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
     ],
-    artifactName: '${productName}-Windows-${version}-Setup.${ext}',
+    artifactName: '${productName}-Windows-${version}-Setup.${ext}',,
+    "icon": "app-icon.ico"
   },
   nsis: {
     oneClick: false,
@@ -30,5 +56,10 @@
   linux: {
     target: ['AppImage'],
     artifactName: '${productName}-Linux-${version}.${ext}',
+  },
+  linux: {
+    target: ['AppImage'],
+    artifactName: '${productName}-Linux-${version}.${ext}',,
+    "icon": "app-icon.ico"
   },
 }

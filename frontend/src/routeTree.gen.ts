@@ -8,245 +8,287 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as TimestampRouteImport } from './routes/timestamp'
-import { Route as ThemeRouteImport } from './routes/theme'
-import { Route as SnipasteRouteImport } from './routes/snipaste'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as Screen_shotRouteImport } from './routes/screen_shot'
-import { Route as MarketRouteImport } from './routes/market'
-import { Route as Float_ballRouteImport } from './routes/float_ball'
-import { Route as DevRouteImport } from './routes/dev'
-import { Route as ClipboardRouteImport } from './routes/clipboard'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as TimestampRouteImport } from './routes/timestamp';
+import { Route as ThemeRouteImport } from './routes/theme';
+import { Route as SnipasteRouteImport } from './routes/snipaste';
+import { Route as SettingsRouteImport } from './routes/settings';
+import { Route as Screen_shotRouteImport } from './routes/screen_shot';
+import { Route as MarketRouteImport } from './routes/market';
+import { Route as LanShareRouteImport } from './routes/lan-share';
+import { Route as Float_ballRouteImport } from './routes/floatBall/float_ball';
+import { Route as DevRouteImport } from './routes/dev';
+import { Route as ClipboardRouteImport } from './routes/clipboard';
+import { Route as AddPluginRouteImport } from './routes/add-plugin';
+import { Route as IndexRouteImport } from './routes/index';
 
 const TimestampRoute = TimestampRouteImport.update({
   id: '/timestamp',
   path: '/timestamp',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ThemeRoute = ThemeRouteImport.update({
   id: '/theme',
   path: '/theme',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SnipasteRoute = SnipasteRouteImport.update({
   id: '/snipaste',
   path: '/snipaste',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const Screen_shotRoute = Screen_shotRouteImport.update({
   id: '/screen_shot',
   path: '/screen_shot',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
+const LanShareRoute = LanShareRouteImport.update({
+  id: '/lan-share',
+  path: '/lan-share',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const Float_ballRoute = Float_ballRouteImport.update({
   id: '/float_ball',
   path: '/float_ball',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DevRoute = DevRouteImport.update({
   id: '/dev',
   path: '/dev',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ClipboardRoute = ClipboardRouteImport.update({
   id: '/clipboard',
   path: '/clipboard',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
+const AddPluginRoute = AddPluginRouteImport.update({
+  id: '/add-plugin',
+  path: '/add-plugin',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/clipboard': typeof ClipboardRoute
-  '/dev': typeof DevRoute
-  '/float_ball': typeof Float_ballRoute
-  '/market': typeof MarketRoute
-  '/screen_shot': typeof Screen_shotRoute
-  '/settings': typeof SettingsRoute
-  '/snipaste': typeof SnipasteRoute
-  '/theme': typeof ThemeRoute
-  '/timestamp': typeof TimestampRoute
+  '/': typeof IndexRoute;
+  '/add-plugin': typeof AddPluginRoute;
+  '/clipboard': typeof ClipboardRoute;
+  '/dev': typeof DevRoute;
+  '/float_ball': typeof Float_ballRoute;
+  '/lan-share': typeof LanShareRoute;
+  '/market': typeof MarketRoute;
+  '/screen_shot': typeof Screen_shotRoute;
+  '/settings': typeof SettingsRoute;
+  '/snipaste': typeof SnipasteRoute;
+  '/theme': typeof ThemeRoute;
+  '/timestamp': typeof TimestampRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/clipboard': typeof ClipboardRoute
-  '/dev': typeof DevRoute
-  '/float_ball': typeof Float_ballRoute
-  '/market': typeof MarketRoute
-  '/screen_shot': typeof Screen_shotRoute
-  '/settings': typeof SettingsRoute
-  '/snipaste': typeof SnipasteRoute
-  '/theme': typeof ThemeRoute
-  '/timestamp': typeof TimestampRoute
+  '/': typeof IndexRoute;
+  '/add-plugin': typeof AddPluginRoute;
+  '/clipboard': typeof ClipboardRoute;
+  '/dev': typeof DevRoute;
+  '/float_ball': typeof Float_ballRoute;
+  '/lan-share': typeof LanShareRoute;
+  '/market': typeof MarketRoute;
+  '/screen_shot': typeof Screen_shotRoute;
+  '/settings': typeof SettingsRoute;
+  '/snipaste': typeof SnipasteRoute;
+  '/theme': typeof ThemeRoute;
+  '/timestamp': typeof TimestampRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/clipboard': typeof ClipboardRoute
-  '/dev': typeof DevRoute
-  '/float_ball': typeof Float_ballRoute
-  '/market': typeof MarketRoute
-  '/screen_shot': typeof Screen_shotRoute
-  '/settings': typeof SettingsRoute
-  '/snipaste': typeof SnipasteRoute
-  '/theme': typeof ThemeRoute
-  '/timestamp': typeof TimestampRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/add-plugin': typeof AddPluginRoute;
+  '/clipboard': typeof ClipboardRoute;
+  '/dev': typeof DevRoute;
+  '/float_ball': typeof Float_ballRoute;
+  '/lan-share': typeof LanShareRoute;
+  '/market': typeof MarketRoute;
+  '/screen_shot': typeof Screen_shotRoute;
+  '/settings': typeof SettingsRoute;
+  '/snipaste': typeof SnipasteRoute;
+  '/theme': typeof ThemeRoute;
+  '/timestamp': typeof TimestampRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/'
+    | '/add-plugin'
     | '/clipboard'
     | '/dev'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/screen_shot'
     | '/settings'
     | '/snipaste'
     | '/theme'
-    | '/timestamp'
-  fileRoutesByTo: FileRoutesByTo
+    | '/timestamp';
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | '/'
+    | '/add-plugin'
     | '/clipboard'
     | '/dev'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/screen_shot'
     | '/settings'
     | '/snipaste'
     | '/theme'
-    | '/timestamp'
+    | '/timestamp';
   id:
     | '__root__'
     | '/'
+    | '/add-plugin'
     | '/clipboard'
     | '/dev'
     | '/float_ball'
+    | '/lan-share'
     | '/market'
     | '/screen_shot'
     | '/settings'
     | '/snipaste'
     | '/theme'
-    | '/timestamp'
-  fileRoutesById: FileRoutesById
+    | '/timestamp';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ClipboardRoute: typeof ClipboardRoute
-  DevRoute: typeof DevRoute
-  Float_ballRoute: typeof Float_ballRoute
-  MarketRoute: typeof MarketRoute
-  Screen_shotRoute: typeof Screen_shotRoute
-  SettingsRoute: typeof SettingsRoute
-  SnipasteRoute: typeof SnipasteRoute
-  ThemeRoute: typeof ThemeRoute
-  TimestampRoute: typeof TimestampRoute
+  IndexRoute: typeof IndexRoute;
+  AddPluginRoute: typeof AddPluginRoute;
+  ClipboardRoute: typeof ClipboardRoute;
+  DevRoute: typeof DevRoute;
+  Float_ballRoute: typeof Float_ballRoute;
+  LanShareRoute: typeof LanShareRoute;
+  MarketRoute: typeof MarketRoute;
+  Screen_shotRoute: typeof Screen_shotRoute;
+  SettingsRoute: typeof SettingsRoute;
+  SnipasteRoute: typeof SnipasteRoute;
+  ThemeRoute: typeof ThemeRoute;
+  TimestampRoute: typeof TimestampRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/timestamp': {
-      id: '/timestamp'
-      path: '/timestamp'
-      fullPath: '/timestamp'
-      preLoaderRoute: typeof TimestampRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/timestamp';
+      path: '/timestamp';
+      fullPath: '/timestamp';
+      preLoaderRoute: typeof TimestampRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/theme': {
-      id: '/theme'
-      path: '/theme'
-      fullPath: '/theme'
-      preLoaderRoute: typeof ThemeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/theme';
+      path: '/theme';
+      fullPath: '/theme';
+      preLoaderRoute: typeof ThemeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/snipaste': {
-      id: '/snipaste'
-      path: '/snipaste'
-      fullPath: '/snipaste'
-      preLoaderRoute: typeof SnipasteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/snipaste';
+      path: '/snipaste';
+      fullPath: '/snipaste';
+      preLoaderRoute: typeof SnipasteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/settings';
+      path: '/settings';
+      fullPath: '/settings';
+      preLoaderRoute: typeof SettingsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/screen_shot': {
-      id: '/screen_shot'
-      path: '/screen_shot'
-      fullPath: '/screen_shot'
-      preLoaderRoute: typeof Screen_shotRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/screen_shot';
+      path: '/screen_shot';
+      fullPath: '/screen_shot';
+      preLoaderRoute: typeof Screen_shotRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/market': {
-      id: '/market'
-      path: '/market'
-      fullPath: '/market'
-      preLoaderRoute: typeof MarketRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/market';
+      path: '/market';
+      fullPath: '/market';
+      preLoaderRoute: typeof MarketRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/lan-share': {
+      id: '/lan-share';
+      path: '/lan-share';
+      fullPath: '/lan-share';
+      preLoaderRoute: typeof LanShareRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/float_ball': {
-      id: '/float_ball'
-      path: '/float_ball'
-      fullPath: '/float_ball'
-      preLoaderRoute: typeof Float_ballRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/float_ball';
+      path: '/float_ball';
+      fullPath: '/float_ball';
+      preLoaderRoute: typeof Float_ballRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/dev': {
-      id: '/dev'
-      path: '/dev'
-      fullPath: '/dev'
-      preLoaderRoute: typeof DevRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/dev';
+      path: '/dev';
+      fullPath: '/dev';
+      preLoaderRoute: typeof DevRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/clipboard': {
-      id: '/clipboard'
-      path: '/clipboard'
-      fullPath: '/clipboard'
-      preLoaderRoute: typeof ClipboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/clipboard';
+      path: '/clipboard';
+      fullPath: '/clipboard';
+      preLoaderRoute: typeof ClipboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/add-plugin': {
+      id: '/add-plugin';
+      path: '/add-plugin';
+      fullPath: '/add-plugin';
+      preLoaderRoute: typeof AddPluginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AddPluginRoute: AddPluginRoute,
   ClipboardRoute: ClipboardRoute,
   DevRoute: DevRoute,
   Float_ballRoute: Float_ballRoute,
+  LanShareRoute: LanShareRoute,
   MarketRoute: MarketRoute,
   Screen_shotRoute: Screen_shotRoute,
   SettingsRoute: SettingsRoute,
   SnipasteRoute: SnipasteRoute,
   ThemeRoute: ThemeRoute,
   TimestampRoute: TimestampRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();

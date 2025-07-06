@@ -1,0 +1,59 @@
+/* 局域网共享插件样式 */
+.lan-share-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.lan-share-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.service-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-status {
+  display: flex;
+  align-items: center;
+}
+
+.lan-share-tabs {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.lan-share-tabs .arco-tabs-content {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lan-share-tabs .arco-tabs-content-inner {
+  height: 100%;
+}
+
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--color-text-3);
+  font-size: 16px;
+}
+
+.lan-share-footer {
+  margin-top: 16px;
+  text-align: center;
+} 

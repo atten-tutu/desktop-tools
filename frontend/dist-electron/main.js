@@ -32,6 +32,10 @@ function createMainWindow() {
     width: 800,
     height: 600,
     show: false,
+    autoHideMenuBar: true,
+    // 隐藏菜单栏
+    icon: path.join(process.env.APP_ROOT, "app-icon.ico"),
+    // 设置应用图标
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
       nodeIntegration: true,
@@ -43,6 +47,7 @@ function createMainWindow() {
   } else {
     mainWindow.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
+  setupMainWindowEvents();
 }
 function createFloatBallWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -57,6 +62,10 @@ function createFloatBallWindow() {
     skipTaskbar: true,
     resizable: false,
     transparent: true,
+    backgroundColor: "#00000000",
+    // 完全透明的背景
+    show: false,
+    // 初始不显示
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
       nodeIntegration: true,
@@ -64,6 +73,9 @@ function createFloatBallWindow() {
     }
   });
   floatBallWindow.loadURL(`${VITE_DEV_SERVER_URL}/float_ball`);
+  floatBallWindow.once("ready-to-show", () => {
+    floatBallWindow == null ? void 0 : floatBallWindow.show();
+  });
 }
 ipcMain.handle("minimize-main-window", () => {
   if (mainWindow) mainWindow.minimize();
@@ -77,6 +89,10 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) ;
 });
 app.whenReady().then(() => {
+  const iconPath = path.join(process.env.APP_ROOT, "app-icon.ico");
+  if (fs.existsSync(iconPath)) {
+    app.setAppUserModelId("com.desktop.tools");
+  }
   createMainWindow();
   createFloatBallWindow();
   session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
@@ -88,14 +104,29 @@ app.whenReady().then(() => {
     if (!mainWindow) return;
     if (mainWindow.isVisible()) {
       mainWindow.hide();
+      showFloatBall();
     } else {
       mainWindow.show();
       mainWindow.focus();
+      hideFloatBall();
     }
   });
   ipcMain.on("toggle-main-window", () => {
     if (!mainWindow) return;
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+      showFloatBall();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+      hideFloatBall();
+    }
+  });
+  ipcMain.on("hide-float-ball", () => {
+    hideFloatBall();
+  });
+  ipcMain.on("show-float-ball", () => {
+    showFloatBall();
   });
   ipcMain.on("open-plugin", (event, pluginName) => {
     openPluginWindow(pluginName);
@@ -103,6 +134,11 @@ app.whenReady().then(() => {
       `Opened plugin: ${pluginName}`,
       path.join(process.env.APP_ROOT, "plugins", pluginName, "index.html")
     );
+  });
+  ipcMain.on("search-plugins", async (event) => {
+    const plugins = getAllPlugins();
+    event.returnValue = plugins;
+    console.log(`Searched plugins: ${plugins.map((p) => p.name).join(", ")}`);
   });
 });
 let editorWindow = null;
@@ -183,6 +219,58 @@ function openPluginWindow(pluginName) {
     }
   });
   win2.loadFile(pluginHtml);
+}
+function getAllPlugins() {
+  const pluginsDir = path.join(process.env.APP_ROOT, "plugins");
+  const result = [];
+  const dirs = fs.readdirSync(pluginsDir, { withFileTypes: true }).filter((dirent) => dirent.isDirectory());
+  for (const dirent of dirs) {
+    const pluginJsonPath = path.join(pluginsDir, dirent.name, "plugin.json");
+    if (fs.existsSync(pluginJsonPath)) {
+      const json = JSON.parse(fs.readFileSync(pluginJsonPath, "utf-8"));
+      let iconDataUrl = "";
+      if (json.icon) {
+        const iconPath = path.join(pluginsDir, dirent.name, json.icon);
+        if (fs.existsSync(iconPath)) {
+          const ext = path.extname(iconPath).slice(1) || "png";
+          const fileData = fs.readFileSync(iconPath);
+          const base64 = fileData.toString("base64");
+          iconDataUrl = `data:image/${ext};base64,${base64}`;
+        }
+      }
+      result.push({
+        name: json.name,
+        icon: json.icon,
+        dir: dirent.name,
+        iconDataUrl
+      });
+    }
+  }
+  return result;
+}
+function showFloatBall() {
+  if (floatBallWindow && !floatBallWindow.isVisible()) {
+    floatBallWindow.show();
+  }
+}
+function hideFloatBall() {
+  if (floatBallWindow && floatBallWindow.isVisible()) {
+    floatBallWindow.hide();
+  }
+}
+function setupMainWindowEvents() {
+  if (!mainWindow) return;
+  mainWindow.on("close", (event) => {
+    event.preventDefault();
+    mainWindow == null ? void 0 : mainWindow.hide();
+    showFloatBall();
+  });
+  mainWindow.on("hide", () => {
+    showFloatBall();
+  });
+  mainWindow.on("show", () => {
+    hideFloatBall();
+  });
 }
 export {
   MAIN_DIST,
