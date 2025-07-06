@@ -6,7 +6,7 @@ import { Space, Button } from '@arco-design/web-react';
 import { ipcRenderer } from 'electron';
 import { useState } from 'react';
 import Search from '../plugins/search/search';
-import HomePageLinks from '@/homepagelinks';
+import HomePageLinks from '@/HomePageLinks'
 import { IconSettings, IconList } from '@arco-design/web-react/icon';
 
 export const Route = createFileRoute('/')({

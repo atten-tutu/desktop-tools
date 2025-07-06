@@ -1,0 +1,42 @@
+/* src/plugins/market/market.css */
+.app-market-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 插件列表滚动容器样式 */
+.plugins-scroll-container {
+  max-height: 80vh; /* 设置最大高度为视口高度的80% */
+  overflow-y: auto; /* 当内容超过容器高度时显示垂直滚动条 */
+  overflow-x: hidden; /* 隐藏水平滚动条 */
+  border: 1px solid #e5e7eb; /* 添加边框 */
+  border-radius: 0.5rem; /* 圆角 */
+  padding: 0.5rem; /* 内边距 */
+  margin-bottom: 1rem; /* 底部间距 */
+}
+
+/* 自定义滚动条样式 */
+.plugins-scroll-container::-webkit-scrollbar {
+  width: 6px; /* 滚动条宽度 */
+}
+
+.plugins-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 滚动条轨道背景 */
+  border-radius: 4px;
+}
+
+.plugins-scroll-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1; /* 滚动条滑块颜色 */
+  border-radius: 4px;
+}
+
+.plugins-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8; /* 鼠标悬停时滑块颜色 */
+}
