@@ -1,10 +1,12 @@
 // src/plugins/market/market.tsx
 import React, { useState } from 'react';
 import { useTranslation } from '../../i18n/i18n';
-import { Input, List, Card, Button } from '@arco-design/web-react';
+import { Input, List, Card, Button, Message } from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon'; 
 import { PluginProvider, usePluginContext } from './PluginContext';
 import { Link } from '@tanstack/react-router';
+import { installPlugin } from './install';
+import './market.css'; // 引入自定义样式文件
 
 // 应用市场组件
 const AppMarket: React.FC = () => {
@@ -19,9 +21,17 @@ const AppMarket: React.FC = () => {
     plugin.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const handleInstall = (pluginId: number) => {
-    setInstalledPlugins([...installedPlugins, pluginId]);
-    // 这里可以添加实际的安装逻辑
+  const handleInstall = async (pluginId: number) => {
+    const pluginToInstall = plugins.find(plugin => plugin.id === pluginId);
+    if (pluginToInstall) {
+      try {
+        await installPlugin(pluginToInstall.name);
+        setInstalledPlugins([...installedPlugins, pluginId]);
+        Message.success(`${pluginToInstall.name} 插件安装成功`);
+      } catch (error) {
+        Message.error(`${pluginToInstall.name} 插件安装失败，请稍后重试`);
+      }
+    }
   };
 
   const handleUninstall = (pluginId: number) => {
@@ -30,38 +40,45 @@ const AppMarket: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="app-market-container">
       <h2>{t('app_market')}</h2>
-      <Input
-        placeholder={t('search_placeholder_for_market')}
-        prefix={<IconSearch />} // 使用按需导入的图标
-        value={searchText}
-        onChange={(value) => setSearchText(value)}
-      />
-      <Button onClick={() => window.location.href = '/add-plugin'}>
-        {t('add_plugin')}
-      </Button>
-      <List
-        dataSource={filteredPlugins}
-        render={(item) => (
-          <List.Item>
-            <Card title={item.name}>
-              <p>{item.description}</p>
-              <p>{t('version')}: {item.version}</p>
-              <p>{t('changelog')}: {item.changelog}</p>
-              {installedPlugins.includes(item.id)? (
-                <Button onClick={() => handleUninstall(item.id)}>
-                  {t('uninstall')}
-                </Button>
-              ) : (
-                <Button onClick={() => handleInstall(item.id)}>
-                  {t('install')}
-                </Button>
-              )}
-            </Card>
-          </List.Item>
-        )}
-      />
+      <div className="search-bar">
+        <Input
+          placeholder={t('search_placeholder_for_market')}
+          prefix={<IconSearch />}
+          value={searchText}
+          onChange={(value) => setSearchText(value)}
+        />
+        <Button onClick={() => window.location.href = '/add-plugin'}>
+          {t('add_plugin')}
+        </Button>
+      </div>
+      
+      {/* 插件列表滚动容器 */}
+      <div className="plugins-scroll-container">
+        <List
+          dataSource={filteredPlugins}
+          render={(item) => (
+            <List.Item>
+              <Card title={item.name}>
+                <p>{item.description}</p>
+                <p>{t('version')}: {item.version}</p>
+                <p>{t('changelog')}: {item.changelog}</p>
+                {installedPlugins.includes(item.id)? (
+                  <Button onClick={() => handleUninstall(item.id)}>
+                    {t('uninstall')}
+                  </Button>
+                ) : (
+                  <Button onClick={() => handleInstall(item.id)}>
+                    {t('install')}
+                  </Button>
+                )}
+              </Card>
+            </List.Item>
+          )}
+        />
+      </div>
+      
       <Link to="/" className="theme-app-container a">{t('back_to_home')}</Link>
     </div>
   );

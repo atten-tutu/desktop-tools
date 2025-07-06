@@ -12,6 +12,9 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import fs from 'fs';
+import { initialize, enable } from '@electron/remote/main';
+
+initialize();
 import { session } from 'electron';
 
 // @ts-ignore
@@ -104,7 +107,20 @@ function createFloatBallWindow() {
     },
   });
 
-  floatBallWindow.loadURL(`${VITE_DEV_SERVER_URL}/float_ball`);
+  // 启用 remote 模块
+  enable(floatBallWindow.webContents);
+
+  // 修改为加载独立的HTML文件
+  if (VITE_DEV_SERVER_URL) {
+    // 开发环境使用
+    floatBallWindow.loadFile(
+      path.join(process.env.APP_ROOT!, 'float-ball.html')
+    );
+  } else {
+    // 生产环境使用
+    floatBallWindow.loadFile(path.join(RENDERER_DIST, 'float-ball.html'));
+  }
+
   // 窗口准备好后显示
   floatBallWindow.once('ready-to-show', () => {
     floatBallWindow?.show();
