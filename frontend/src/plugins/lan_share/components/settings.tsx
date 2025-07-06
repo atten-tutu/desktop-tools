@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Form, Input, InputNumber, Button, Message } from '@arco-design/web-react';
-import { IconFolder } from '@arco-design/web-react/icon';
+import { Form, Input, InputNumber, Button, Message, Checkbox, List, Spin, Space, Typography, Card } from '@arco-design/web-react';
+import { IconFolder, IconScan, IconDesktop, IconWifi } from '@arco-design/web-react/icon';
 import { useLanShare } from '../context/LanShareContext';
 import { lanShareIpc } from '../api/ipc-interface';
+import type { DeviceInfo } from '../api';
 import '../styles/settings.css';
 
 const FormItem = Form.Item;
+const { Title, Text } = Typography;
 
 interface FormValues {
   hostname: string;
@@ -20,9 +22,23 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ formRef }) => {
-  const { hostname, port, setPort, savePath, setSavePath, setHostname } = useLanShare();
+  const { 
+    hostname, 
+    port, 
+    setPort, 
+    savePath, 
+    setSavePath, 
+    setHostname, 
+    scanDevices, 
+    availableDevices, 
+    selectedDevices,
+    selectDevice,
+    selectAllDevices
+  } = useLanShare();
+  
   const [form] = Form.useForm();
   const [defaultDownloadPath, setDefaultDownloadPath] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
   const internalRef = useRef<{ submit: () => void }>({
     submit: () => form.submit()
   });
@@ -33,7 +49,6 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
       try {
         const path = await lanShareIpc.getDownloadsPath();
         setDefaultDownloadPath(path);
-        // 如果没有设置保存路径，使用默认下载路径
         if (!savePath) {
           setSavePath(path);
           form.setFieldValue('savePath', path);
@@ -55,10 +70,8 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
     });
   }, [hostname, port, savePath, defaultDownloadPath, form]);
 
-  // 将内部ref暴露给外部
   React.useImperativeHandle(formRef, () => internalRef.current);
   
-  // 选择文件保存路径
   const handleSelectPath = async () => {
     try {
       const selectedPath = await lanShareIpc.selectDirectory();
@@ -72,7 +85,6 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
     }
   };
   
-  // 处理输入框清除
   const handleClear = (field: keyof FormValues) => {
     switch (field) {
       case 'hostname':
@@ -97,23 +109,51 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
 
   // 保存设置
   const handleSubmit = (values: FormValues) => {
-    // 保存本机名称
     setHostname(values.hostname);
     
-    // 保存端口号
     setPort(values.port);
     
-    // 保存文件路径
     setSavePath(values.savePath || defaultDownloadPath);
     
-    // 使用 notification 代替 Message
     try {
       console.log('Settings saved successfully');
-      // 不使用 Message 组件，避免渲染问题
     } catch (error) {
       console.error('Error saving settings:', error);
     }
   };
+
+  // 处理扫描设备
+  const handleScanDevices = async () => {
+    setIsScanning(true);
+    try {
+      await scanDevices();
+      Message.success('设备扫描完成');
+    } catch (error) {
+      console.error('Failed to scan devices:', error);
+      Message.error('设备扫描失败');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  // 处理设备选择
+  const handleDeviceSelect = (device: DeviceInfo, checked: boolean) => {
+    selectDevice(device.id, checked);
+  };
+
+  // 处理全选/全不选
+  const handleSelectAll = (checked: boolean) => {
+    selectAllDevices(checked);
+  };
+
+  // 检查设备是否被选中
+  const isDeviceSelected = (deviceId: string) => {
+    return selectedDevices.some(device => device.id === deviceId);
+  };
+
+  // 全选状态
+  const allSelected = availableDevices.length > 0 && 
+    availableDevices.length === selectedDevices.length;
   
   return (
     <div className="settings-container">
@@ -180,6 +220,73 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
               <Button icon={<IconFolder />} onClick={handleSelectPath} />
             }
           />
+        </FormItem>
+
+        <FormItem
+          label="设备扫描"
+          tooltip="扫描局域网中的其他设备"
+        >
+          <Space direction="vertical" style={{ width: '100%' }}>
+            <Button 
+              type="primary" 
+              onClick={handleScanDevices} 
+              loading={isScanning}
+              style={{ marginBottom: 16 }}
+            >
+              扫描设备
+            </Button>
+            
+            <Card className="devices-card">
+              <div className="devices-header">
+                <Checkbox 
+                  checked={allSelected}
+                  onChange={handleSelectAll}
+                  disabled={availableDevices.length === 0}
+                >
+                  全选
+                </Checkbox>
+              </div>
+              
+              {isScanning ? (
+                <div className="devices-loading">
+                  <Spin tip="正在扫描设备..." />
+                </div>
+              ) : availableDevices.length > 0 ? (
+                <List
+                  className="devices-list"
+                  dataSource={availableDevices}
+                  render={(item, index) => (
+                    <List.Item
+                      key={item.id}
+                      className="device-item"
+                      actions={[
+                        <Checkbox
+                          key="select"
+                          checked={isDeviceSelected(item.id)}
+                          onChange={(checked) => handleDeviceSelect(item, checked)}
+                        />
+                      ]}
+                    >
+                      <div className="device-info">
+                        <IconDesktop className="device-icon" />
+                        <div className="device-details">
+                          <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                          <Text type="secondary">{item.ip}</Text>
+                        </div>
+                        {item.isOnline && (
+                          <IconWifi className="device-status-icon online" />
+                        )}
+                      </div>
+                    </List.Item>
+                  )}
+                />
+              ) : (
+                <div className="devices-empty">
+                  <Text type="secondary">暂无可用设备，请点击扫描按钮</Text>
+                </div>
+              )}
+            </Card>
+          </Space>
         </FormItem>
       </Form>
     </div>
