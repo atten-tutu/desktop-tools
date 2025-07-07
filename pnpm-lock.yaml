@@ -35,6 +35,9 @@ importers:
       '@arco-design/web-react':
         specifier: ^2.66.1
         version: 2.66.1(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@electron/remote':
+        specifier: ^2.1.2
+        version: 2.1.2(electron@30.5.1)
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0

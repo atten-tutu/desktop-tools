@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@arco-design/web-react": "^2.66.1",
+    "@electron/remote": "^2.1.2",
     "dotenv-cli": "^8.0.0",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.2.0",
