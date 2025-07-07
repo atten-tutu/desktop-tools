@@ -2,7 +2,7 @@
 import { Message } from '@arco-design/web-react';
 import { lanShareIpc } from './ipc-interface';
 import type { Message as LanShareMessage } from './ipc-interface';
-import { useTranslation } from '../../i18n/i18n';
+import { useTranslation } from '../../../i18n/i18n';
 
 // 设备信息类型
 export interface DeviceInfo {
