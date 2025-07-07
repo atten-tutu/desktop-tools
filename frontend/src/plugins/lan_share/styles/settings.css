@@ -1,0 +1,75 @@
+.settings-container {
+  padding: 20px;
+  background-color: var(--color-bg-1);
+  border-radius: 4px;
+  height: 100%;
+}
+
+.settings-title {
+  margin-bottom: 24px;
+  font-size: 20px;
+  color: var(--color-text-1);
+}
+
+.settings-form {
+  max-width: 600px;
+}
+
+.settings-form .arco-form-item {
+  margin-bottom: 24px;
+}
+
+/* 设备列表样式 */
+.devices-card {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.devices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.devices-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.devices-loading,
+.devices-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.device-item {
+  padding: 8px 0;
+}
+
+.device-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.device-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: var(--color-text-2);
+}
+
+.device-details {
+  flex: 1;
+}
+
+.device-status-icon {
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+.device-status-icon.online {
+  color: var(--success-6);
+}

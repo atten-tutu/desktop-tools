@@ -5,7 +5,7 @@
   height: 100%;
   position: relative;
   overflow: hidden; 
-  max-height: calc(100vh - 100px); 
+  max-height: calc(100vh - 100px);
 }
 
 .secret-code-container {
@@ -20,16 +20,56 @@
   color: var(--color-text-2);
 }
 
-.messages-container {
+/* 消息容器包装器，用于定位固定背景 */
+.messages-wrapper {
   flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  margin-bottom: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background-color: var(--color-bg-2);
   border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* 消息区域背景网络信息样式 */
+.network-info-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-4);
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.network-icon-background {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.network-text-background {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 消息容器 */
+.messages-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 10px;
   position: relative;
-  min-height: 200px; /* 确保有最小高度 */
-  max-height: calc(100% - 100px); /* 减去输入框高度 */
+  z-index: 1;
 }
 
 .empty-message {
@@ -40,7 +80,10 @@
   align-items: center;
 }
 
+/* 消息气泡样式 */
 .message-bubble {
+  position: relative;
+  z-index: 1;
   margin-bottom: 16px;
   max-width: 70%;
   display: flex;
@@ -157,26 +200,16 @@
   position: relative;
 }
 
-.message-input {
-  flex: 1;
-}
-
-.drag-hint {
+.paste-hint {
   position: absolute;
-  top: 50%;
+  bottom: 10px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  padding: 20px;
-  border-radius: 8px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.chat-container.dragging .drag-hint {
-  opacity: 1;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 /* 状态颜色 */
@@ -192,105 +225,56 @@
   color: var(--color-warning);
 }
 
-/* 上传区域样式 */
-.upload-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 8px;
-}
-
-.file-preview-area {
-  margin-bottom: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 0;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.file-preview-item {
-  position: relative;
-  padding: 4px 8px;
-  background-color: var(--color-fill-2);
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  max-width: 200px;
+  margin-top: 8px;
 }
 
-.file-preview-name {
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 4px;
-  max-width: 120px;
-}
-
-.file-preview-remove {
-  cursor: pointer;
+.device-name-footer {
+  font-size: 11px;
   color: var(--color-text-3);
-  margin: 0 4px;
+  margin-right: 8px;
 }
 
-.file-preview-remove:hover {
-  color: var(--color-danger);
+/* 滚动条样式 */
+.messages-container::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
 }
 
-/* 上传和发送按钮容器 */
-.upload-send-container {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+.messages-container::-webkit-scrollbar-track {
+  background: var(--color-bg-3);
+  border-radius: 4px;
 }
 
-/* 自定义上传组件样式 */
-.custom-upload {
+.messages-container::-webkit-scrollbar-thumb {
+  background-color: var(--color-neutral-4);
+  border-radius: 4px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-neutral-5);
+}
+
+/* 深色模式下的滚动条样式 */
+:root[arco-theme="dark"] .messages-container::-webkit-scrollbar-track {
+  background: var(--color-bg-4);
+}
+
+:root[arco-theme="dark"] .messages-container::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-6);
+}
+
+:root[arco-theme="dark"] .messages-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-7);
+}
+
+/* 空消息容器样式 */
+.empty-messages-container {
   flex: 1;
+  height: 100%;
+  z-index: 1;
+  position: relative;
 }
-
-.custom-upload .arco-upload-trigger {
-  width: 100% !important;
-  height: 40px !important;
-  border: 1px dashed var(--color-primary-light-3) !important;
-  border-radius: 4px !important;
-  padding: 0 !important;
-}
-
-.custom-upload .arco-upload-trigger:hover {
-  border-color: var(--color-primary) !important;
-  border-width: 1px !important;
-}
-
-.custom-upload .arco-upload-trigger-drag {
-  width: 100% !important;
-  height: 40px !important;
-}
-
-.custom-upload .arco-upload-trigger-drag:hover {
-  background-color: var(--color-primary-light-1) !important;
-}
-
-.upload-drag-content {
-  font-size: 13px !important;
-  line-height: 40px !important;
-  height: 40px !important;
-  text-align: center;
-  color: var(--color-text-3);
-}
-
-/* 发送按钮样式 */
-.send-button {
-  height: 40px !important;
-  padding: 0 16px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 90px;
-  margin-left: auto;
-} 

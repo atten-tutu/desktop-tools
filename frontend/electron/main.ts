@@ -1,9 +1,15 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, screen  } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, screen, dialog } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import fs from 'fs';
 import { initialize, enable } from '@electron/remote/main';
+import { hostname } from 'os';
+import { LanShareServer } from './services/lan-share-server';
+import { setupLanShareIPC, cleanupLanShareIPC } from './services/lan-share-ipc';
+
+// 创建 LAN 共享服务器实例
+const lanShareServer = new LanShareServer();
 
 initialize();
 
@@ -40,7 +46,7 @@ function createMainWindow() {
     autoHideMenuBar: true, // 隐藏菜单栏
     icon: path.join(process.env.APP_ROOT!, 'app-icon.ico'), // 设置应用图标
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -73,7 +79,7 @@ function createFloatBallWindow() {
     backgroundColor: '#00000000', // 完全透明的背景
     show: false, // 初始不显示
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -126,6 +132,9 @@ app.whenReady().then(() => {
   createMainWindow()
   createFloatBallWindow()
 
+  // 设置 LAN 共享服务器的 IPC 处理
+  setupLanShareIPC(lanShareServer);
+
   globalShortcut.register('CommandOrControl+Shift+P', () => {
     if (!mainWindow) return
     if (mainWindow.isVisible()) {
@@ -170,10 +179,18 @@ app.whenReady().then(() => {
     
 })
 
-// ✅ 退出时清理注册的快捷键
+// ✅ 退出时清理注册的快捷键和 IPC 处理程序
 app.on('will-quit', () => {
-  globalShortcut.unregisterAll()
-})
+  globalShortcut.unregisterAll();
+  
+  // 清理 LAN 共享服务器的 IPC 处理程序
+  cleanupLanShareIPC();
+  
+  // 停止 LAN 共享服务器
+  lanShareServer.stop().catch(err => {
+    console.error('Error stopping LAN Share server:', err);
+  });
+});
 
 function openPluginWindow(pluginName: string) {
   const pluginHtml = path.join(process.env.APP_ROOT!, 'plugins', pluginName, 'index.html');
@@ -181,7 +198,7 @@ function openPluginWindow(pluginName: string) {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -252,4 +269,39 @@ function setupMainWindowEvents() {
     hideFloatBall()
   })
 }
+
+// 获取本机名称
+ipcMain.handle('get-hostname', async () => {
+  return hostname();
+});
+
+// 获取本机 IP 地址
+ipcMain.handle('get-ip', async () => {
+  const nets = require('os').networkInterfaces();
+  const results = [];
+  for (const name of Object.keys(nets)) {
+    const net = nets[name];
+    if (net) { // 确保 net 不为 undefined
+      for (const n of net) {
+        // 只处理 IPv4 地址
+        if (n.family === 'IPv4' && !n.internal) {
+          results.push(n.address);
+        }
+      }
+    }
+  }
+  return results.length > 0 ? results[0] : 'No IP found';
+});
+
+// 选择目录
+ipcMain.handle('select-directory', async () => {
+  return dialog.showOpenDialog({
+    properties: ['openDirectory', 'createDirectory']
+  });
+});
+
+// 获取下载文件夹路径
+ipcMain.handle('get-downloads-path', async () => {
+  return app.getPath('downloads');
+});
 

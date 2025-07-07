@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Tabs, Button, Badge, Layout, Modal } from '@arco-design/web-react';
-import { IconHome, IconPoweroff, IconSettings } from '@arco-design/web-react/icon';
+import { Tabs, Button, Badge, Layout, Modal, Tooltip } from '@arco-design/web-react';
+import { IconHome, IconPoweroff, IconSettings, IconCheckCircle, IconCloseCircle } from '@arco-design/web-react/icon';
 import { useTranslation } from '../../i18n/i18n';
 import ChatInterface from './components/chat_interface';
-import DeviceSelector from './components/device_selector';
 import Settings from './components/settings';
 import { useLanShare } from './context/LanShareContext';
 import './styles/index.css';
@@ -18,6 +17,20 @@ const LanSharePlugin: React.FC = () => {
   const { isServiceRunning, toggleService } = useLanShare();
   const { primaryColor } = useSkin();
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const settingsFormRef = useRef<{ submit: () => void }>(null);
+  
+  // 保存设置
+  const handleSaveSettings = () => {
+    if (settingsFormRef.current) {
+      settingsFormRef.current.submit();
+      setSettingsVisible(false);
+    }
+  };
+
+  // 添加调试信息
+  useEffect(() => {
+    console.log(`Current service status: ${isServiceRunning}`);
+  }, [isServiceRunning]);
 
   return (
     <Layout style={{ height: '100vh', width: '100vw' }}>    
@@ -27,6 +40,14 @@ const LanSharePlugin: React.FC = () => {
               <IconHome style={{ fontSize: 28, color: primaryColor }} />
             </Link>
             <h2 style={{ margin: 0 }}>{t('lan_share')}</h2>
+            
+            {/* 服务状态指示器 */}
+            <Tooltip content={isServiceRunning ? t('service_running') : t('service_stopped')}>
+              {isServiceRunning ? 
+                <IconCheckCircle style={{ fontSize: 18, color: 'green' }} /> : 
+                <IconCloseCircle style={{ fontSize: 18, color: 'red' }} />
+              }
+            </Tooltip>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
             <Button 
@@ -49,12 +70,13 @@ const LanSharePlugin: React.FC = () => {
       <Modal
         title={t('settings')}
         visible={settingsVisible}
-        onOk={() => setSettingsVisible(false)}
+        onOk={handleSaveSettings}
+        okText={t('save')}
         onCancel={() => setSettingsVisible(false)}
         autoFocus={false}
         maskClosable={false}
       >
-        <Settings />
+        <Settings formRef={settingsFormRef} />
       </Modal>
     </Layout>
   );
