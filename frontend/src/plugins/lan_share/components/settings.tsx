@@ -5,6 +5,7 @@ import { useLanShare } from '../context/LanShareContext';
 import { lanShareIpc } from '../api/ipc-interface';
 import type { DeviceInfo } from '../api';
 import '../styles/settings.css';
+import { useTranslation } from '../../../i18n/i18n';
 
 const FormItem = Form.Item;
 const { Title, Text } = Typography;
@@ -22,6 +23,7 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ formRef }) => {
+  const { t } = useTranslation();
   const { 
     hostname, 
     port, 
@@ -81,7 +83,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
       }
     } catch (error) {
       console.error('Failed to select directory:', error);
-      Message.error('文件夹选择失败');
+      Message.error(t('select_folder_failed'));
     }
   };
   
@@ -127,10 +129,10 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
     setIsScanning(true);
     try {
       await scanDevices();
-      Message.success('设备扫描完成');
+      Message.success(t('scan_devices_success'));
     } catch (error) {
       console.error('Failed to scan devices:', error);
-      Message.error('设备扫描失败');
+      Message.error(t('scan_devices_failed'));
     } finally {
       setIsScanning(false);
     }
@@ -170,28 +172,28 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
         className="settings-form"
       >
         <FormItem
-          label="本机名称" 
+          label={t('device_name')}
           field="hostname"
-          tooltip="设置自定义名称（对其他设备可见）"
-          rules={[{ required: true, message: '请输入本机名称' }]}
+          tooltip={t('device_name_tooltip')}
+          rules={[{ required: true, message: t('device_name_required') }]}
         >
           <Input
-            placeholder="请输入本机名称" 
+            placeholder={t('device_name_placeholder')}
             allowClear 
             onClear={() => handleClear('hostname')}
           />
         </FormItem>
         
         <FormItem
-          label="端口号" 
+          label={t('port')}
           field="port"
-          tooltip="局域网共享服务的端口号（1024-65535）"
+          tooltip={t('port_tooltip')}
           rules={[
-            { required: true, message: '请输入端口号' },
+            { required: true, message: t('port_required') },
             {
               validator: (value, callback) => {
                 if (value < 1024 || value > 65535) {
-                  callback('端口号必须在1024到65535之间');
+                  callback(t('port_range_invalid'));
                 }
                 callback();
               }
@@ -201,18 +203,18 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
           <InputNumber 
             min={1024} 
             max={65535} 
-            placeholder="请输入端口号" 
+            placeholder={t('port_placeholder')}
           />
         </FormItem>
         
         <FormItem
-          label="保存路径"
+          label={t('save_path')}
           field="savePath"
-          tooltip="接收的文件将被保存在此目录"
-          rules={[{ required: true, message: '请选择文件保存路径' }]}
+          tooltip={t('save_path_tooltip')}
+          rules={[{ required: true, message: t('save_path_required') }]}
         >
           <Input
-            placeholder="请选择文件保存路径"
+            placeholder={t('save_path_placeholder')}
             readOnly
             allowClear
             onClear={() => handleClear('savePath')}
@@ -223,8 +225,8 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
         </FormItem>
 
         <FormItem
-          label="设备扫描"
-          tooltip="扫描局域网中的其他设备"
+          label={t('scan_devices')}
+          tooltip={t('scan_devices_tooltip')}
         >
           <Space direction="vertical" style={{ width: '100%' }}>
             <Button 
@@ -233,7 +235,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
               loading={isScanning}
               style={{ marginBottom: 16 }}
             >
-              扫描设备
+              {t('scan_devices')}
             </Button>
             
             <Card className="devices-card">
@@ -243,13 +245,13 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
                   onChange={handleSelectAll}
                   disabled={availableDevices.length === 0}
                 >
-                  全选
+                  {t('select_all')}
                 </Checkbox>
               </div>
               
               {isScanning ? (
                 <div className="devices-loading">
-                  <Spin tip="正在扫描设备..." />
+                  <Spin tip={t('scanning_devices')} />
                 </div>
               ) : availableDevices.length > 0 ? (
                 <List
@@ -282,7 +284,7 @@ const Settings: React.FC<SettingsProps> = ({ formRef }) => {
                 />
               ) : (
                 <div className="devices-empty">
-                  <Text type="secondary">暂无可用设备，请点击扫描按钮</Text>
+                  <Text type="secondary">{t('no_devices')}</Text>
                 </div>
               )}
             </Card>

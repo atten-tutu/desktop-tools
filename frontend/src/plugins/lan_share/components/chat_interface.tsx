@@ -91,7 +91,7 @@ const ChatInterface: React.FC = () => {
           
           {message.type === 'image' ? (
             <div className="file-content">
-              <img src={message.content} alt={message.fileName} className="image-preview" />
+              <img src={message.content} alt={t('file_image_alt')} className="image-preview" />
               <div className="file-info">
                 <div className="file-name">{message.fileName}</div>
                 <div className="file-size">{message.fileSize}</div>

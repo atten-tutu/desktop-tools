@@ -42,7 +42,7 @@ const LanSharePlugin: React.FC = () => {
             <h2 style={{ margin: 0 }}>{t('lan_share')}</h2>
             
             {/* 服务状态指示器 */}
-            <Tooltip content={isServiceRunning ? "服务已启动" : "服务未启动"}>
+            <Tooltip content={isServiceRunning ? t('service_running') : t('service_stopped')}>
               {isServiceRunning ? 
                 <IconCheckCircle style={{ fontSize: 18, color: 'green' }} /> : 
                 <IconCloseCircle style={{ fontSize: 18, color: 'red' }} />
@@ -68,10 +68,10 @@ const LanSharePlugin: React.FC = () => {
       </Content>
 
       <Modal
-        title="设置"
+        title={t('settings')}
         visible={settingsVisible}
         onOk={handleSaveSettings}
-        okText="保存"
+        okText={t('save')}
         onCancel={() => setSettingsVisible(false)}
         autoFocus={false}
         maskClosable={false}
