@@ -68,7 +68,6 @@ function createMainWindow() {
     autoHideMenuBar: true, // 隐藏菜单栏
     icon: path.join(process.env.APP_ROOT!, 'app-icon.ico'), // 设置应用图标
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
       contextIsolation: false,
     },
@@ -197,9 +196,16 @@ app.whenReady().then(() => {
 
   ipcMain.on('open-plugin', (event, pluginName: string) => {
     openPluginWindow(pluginName);
+
     console.log(
       `Opened plugin: ${pluginName}`,
-      path.join(process.env.APP_ROOT!, 'plugins', pluginName, 'index.html')
+      path.join(
+        process.env.APP_ROOT!,
+        'plugins',
+        pluginName,
+        'dist',
+        'index.html'
+      )
     );
   });
   ipcMain.on('search-plugins', async (event) => {
@@ -238,7 +244,11 @@ ipcMain.handle(
 );
 
 ipcMain.handle('open-screenshot-editor', async (event, base64Image: string) => {
-  console.log(base64Image);
+  // 1. 最小化主窗口
+  if (mainWindow) {
+    mainWindow.minimize();
+  }
+
   editorWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
@@ -247,7 +257,7 @@ ipcMain.handle('open-screenshot-editor', async (event, base64Image: string) => {
     alwaysOnTop: true,
     fullscreen: true,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       contextIsolation: false,
     },
   });
@@ -255,7 +265,10 @@ ipcMain.handle('open-screenshot-editor', async (event, base64Image: string) => {
     editorWindow?.close();
   });
   // 加载你的截图编辑器页面（独立 html）
-  await editorWindow.loadURL('http://localhost:5173/screen_shot');
+  console.log('dirname', __dirname);
+  await editorWindow.loadFile(
+    path.join(__dirname, '..', 'plugins/screenshot/index.html')
+  );
 
   editorWindow?.webContents.send('load-image', base64Image);
 
@@ -281,8 +294,10 @@ function openPluginWindow(pluginName: string) {
     process.env.APP_ROOT!,
     'plugins',
     pluginName,
+    'dist',
     'index.html'
   );
+  console.log(pluginHtml);
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -293,6 +308,12 @@ function openPluginWindow(pluginName: string) {
     },
   });
   win.loadFile(pluginHtml);
+  win.webContents.on('dom-ready', () => {
+    win.webContents.executeJavaScript(
+      `console.log('renderer sees ipc:', !!window.ipcRenderer)`
+    );
+  });
+  win.webContents.openDevTools({ mode: 'detach' });
 }
 
 function getAllPlugins() {

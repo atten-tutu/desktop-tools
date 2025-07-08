@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>截图编辑器</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: crosshair;
+      }
+      #toolbar {
+        position: fixed;
+        padding: 4px;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        display: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+      }
+      #toolbar button {
+        padding: 4px 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="toolbar">
+      <button id="snipaste">贴图</button>
+      <button id="confirm">确认</button>
+      <button id="close">关闭</button>
+    </div>
+    <script src="./screenshot.js"></script>
+  </body>
+</html>
